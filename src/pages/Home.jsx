@@ -28,7 +28,7 @@ export default function Home() {
               <Zap className="w-3.5 h-3.5" /> GAME AUTOMATION DEV
             </div>
             <h1 className="font-heading text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-foreground">
-              AUTOMATE<br />THE <span className="text-accent">INFINITE.</span>
+              GAME AUTOMATION<br /><span className="text-accent">LEARNING ZONE</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground max-w-lg leading-relaxed">
               The definitive learning space for Game Automation Development. Master SDKs, build tools, and connect with a community of builders.
