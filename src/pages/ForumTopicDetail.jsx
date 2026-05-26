@@ -23,9 +23,6 @@ export default function ForumTopicDetail() {
   const [topic, setTopic] = useState(null);
   const [replies, setReplies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [replyBody, setReplyBody] = useState("");
-  const [authorName, setAuthorName] = useState("");
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -44,21 +41,7 @@ export default function ForumTopicDetail() {
     setLoading(false);
   };
 
-  const submitReply = async () => {
-    if (!replyBody.trim()) return toast.error("Reply cannot be empty");
-    setSubmitting(true);
-    await base44.entities.ForumReply.create({
-      topic_id: topicId,
-      body: replyBody.trim(),
-      author_name: authorName.trim() || "Anonymous",
-    });
-    await base44.entities.ForumTopic.update(topicId, { replies_count: (topic.replies_count || 0) + replies.length + 1 });
-    setReplyBody("");
-    toast.success("Reply posted!");
-    const r = await base44.entities.ForumReply.filter({ topic_id: topicId }, "created_date", 100);
-    setReplies(r);
-    setSubmitting(false);
-  };
+
 
   if (loading) {
     return (
@@ -146,33 +129,7 @@ export default function ForumTopicDetail() {
           )}
         </div>
 
-        {/* Reply Form */}
-        <div className="bg-card/60 backdrop-blur-xl border border-border/50 rounded-3xl p-6">
-          <h3 className="font-heading font-bold text-foreground mb-4">Post a Reply</h3>
-          <div className="space-y-3">
-            <Input
-              placeholder="Your name (optional)"
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-              className="bg-background/50 border-border/50 rounded-xl h-11 text-foreground placeholder:text-muted-foreground"
-            />
-            <Textarea
-              placeholder="Write your reply..."
-              value={replyBody}
-              onChange={(e) => setReplyBody(e.target.value)}
-              rows={4}
-              className="bg-background/50 border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground resize-none"
-            />
-            <Button
-              onClick={submitReply}
-              disabled={submitting}
-              className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-xl h-11 font-semibold px-6"
-            >
-              {submitting ? "Posting..." : "Post Reply"}
-              {!submitting && <Send className="w-4 h-4 ml-2" />}
-            </Button>
-          </div>
-        </div>
+
       </div>
     </div>
   );
