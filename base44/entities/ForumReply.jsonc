@@ -1,0 +1,22 @@
+{
+  "name": "ForumReply",
+  "type": "object",
+  "properties": {
+    "topic_id": {
+      "type": "string",
+      "title": "Topic ID"
+    },
+    "body": {
+      "type": "string",
+      "title": "Body"
+    },
+    "author_name": {
+      "type": "string",
+      "title": "Author Name"
+    }
+  },
+  "required": [
+    "topic_id",
+    "body"
+  ]
+}

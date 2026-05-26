@@ -14,6 +14,7 @@ import ResetPassword from '@/pages/ResetPassword';
 import Home from './pages/Home';
 import SDKDocs from './pages/SDKDocs';
 import Forum from './pages/Forum';
+import ForumTopicDetail from './pages/ForumTopicDetail';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -44,6 +45,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Home />} />
       <Route path="/docs" element={<SDKDocs />} />
       <Route path="/forum" element={<Forum />} />
+      <Route path="/forum/:topicId" element={<ForumTopicDetail />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

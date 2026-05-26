@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { Plus, MessageSquare, Eye, X, Send, Tag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -18,13 +19,13 @@ const tagColors = {
   Showcase: "bg-chart-2/15 text-chart-2",
 };
 
-function TopicCard({ topic }) {
-  const tags = topic.tags || [];
+function TopicCard({ topic, onClick }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl p-5 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 hover:scale-[1.01]"
+      onClick={onClick}
+      className="group cursor-pointer bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl p-5 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 hover:scale-[1.01]"
     >
       <div className="flex items-start gap-4">
         <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold text-sm shrink-0">
@@ -34,7 +35,7 @@ function TopicCard({ topic }) {
           <h3 className="font-heading font-bold text-foreground group-hover:text-accent transition-colors truncate">{topic.title}</h3>
           <p className="text-sm text-muted-foreground mt-1 line-clamp-2 leading-relaxed">{topic.body}</p>
           <div className="flex items-center gap-2 mt-3 flex-wrap">
-            {tags.map((t) => (
+            {(topic.tags || []).map((t) => (
               <span key={t} className={`text-xs font-medium px-2.5 py-0.5 rounded-lg ${tagColors[t] || tagColors.General}`}>
                 #{t}
               </span>
@@ -52,6 +53,7 @@ function TopicCard({ topic }) {
 
 export default function Forum() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showNew, setShowNew] = useState(false);
@@ -121,7 +123,7 @@ export default function Forum() {
               <p className="text-sm mt-1">Be the first to start a discussion!</p>
             </div>
           ) : (
-            topics.map((t) => <TopicCard key={t.id} topic={t} />)
+            topics.map((t) => <TopicCard key={t.id} topic={t} onClick={() => navigate(`/forum/${t.id}`)} />)
           )}
         </div>
       </div>

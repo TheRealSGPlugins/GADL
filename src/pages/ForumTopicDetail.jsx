@@ -1,0 +1,179 @@
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import { base44 } from "@/api/base44Client";
+import { ArrowLeft, Send, MessageSquare, Eye } from "lucide-react";
+import { motion } from "framer-motion";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+
+const tagColors = {
+  Python: "bg-chart-4/20 text-chart-4",
+  Lua: "bg-accent/15 text-accent",
+  MemoryOffset: "bg-chart-2/15 text-chart-2",
+  General: "bg-muted text-muted-foreground",
+  Help: "bg-destructive/15 text-destructive",
+  Showcase: "bg-chart-2/15 text-chart-2",
+};
+
+export default function ForumTopicDetail() {
+  const { topicId } = useParams();
+  const [topic, setTopic] = useState(null);
+  const [replies, setReplies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [replyBody, setReplyBody] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    loadData();
+  }, [topicId]);
+
+  const loadData = async () => {
+    setLoading(true);
+    const [t, r] = await Promise.all([
+      base44.entities.ForumTopic.get(topicId),
+      base44.entities.ForumReply.filter({ topic_id: topicId }, "created_date", 100),
+    ]);
+    setTopic(t);
+    setReplies(r);
+    // increment views
+    base44.entities.ForumTopic.update(topicId, { views_count: (t.views_count || 0) + 1 });
+    setLoading(false);
+  };
+
+  const submitReply = async () => {
+    if (!replyBody.trim()) return toast.error("Reply cannot be empty");
+    setSubmitting(true);
+    await base44.entities.ForumReply.create({
+      topic_id: topicId,
+      body: replyBody.trim(),
+      author_name: authorName.trim() || "Anonymous",
+    });
+    await base44.entities.ForumTopic.update(topicId, { replies_count: (topic.replies_count || 0) + replies.length + 1 });
+    setReplyBody("");
+    toast.success("Reply posted!");
+    const r = await base44.entities.ForumReply.filter({ topic_id: topicId }, "created_date", 100);
+    setReplies(r);
+    setSubmitting(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-7 h-7 border-2 border-muted border-t-accent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!topic) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">
+        Topic not found.
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background font-body">
+      <Navbar />
+      <div className="pt-24 pb-16 px-6 max-w-3xl mx-auto">
+        <Link to="/forum" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-accent transition-colors mb-6">
+          <ArrowLeft className="w-4 h-4" /> Back to Forum
+        </Link>
+
+        {/* Topic */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-card/60 backdrop-blur-xl border border-border/50 rounded-3xl p-6 md:p-8 mb-6"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold text-sm shrink-0">
+              {(topic.author_name || "A")[0].toUpperCase()}
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">{topic.author_name || "Anonymous"}</p>
+              <p className="text-xs text-muted-foreground">{new Date(topic.created_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</p>
+            </div>
+            <div className="ml-auto flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1"><MessageSquare className="w-3.5 h-3.5" />{replies.length}</span>
+              <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" />{topic.views_count || 0}</span>
+            </div>
+          </div>
+
+          <h1 className="font-heading text-2xl md:text-3xl font-extrabold tracking-tight text-foreground mb-3">{topic.title}</h1>
+          <p className="text-muted-foreground leading-relaxed">{topic.body}</p>
+
+          {topic.tags?.length > 0 && (
+            <div className="flex gap-2 flex-wrap mt-4">
+              {topic.tags.map((t) => (
+                <span key={t} className={`text-xs font-medium px-2.5 py-0.5 rounded-lg ${tagColors[t] || "bg-muted text-muted-foreground"}`}>
+                  #{t}
+                </span>
+              ))}
+            </div>
+          )}
+        </motion.div>
+
+        {/* Replies */}
+        <div className="space-y-3 mb-8">
+          {replies.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8 text-sm">No replies yet — be the first to respond!</p>
+          ) : (
+            replies.map((reply, i) => (
+              <motion.div
+                key={reply.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="bg-card/40 border border-border/40 rounded-2xl p-5"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-muted-foreground font-bold text-xs">
+                    {(reply.author_name || "A")[0].toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{reply.author_name || "Anonymous"}</p>
+                    <p className="text-xs text-muted-foreground">{new Date(reply.created_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{reply.body}</p>
+              </motion.div>
+            ))
+          )}
+        </div>
+
+        {/* Reply Form */}
+        <div className="bg-card/60 backdrop-blur-xl border border-border/50 rounded-3xl p-6">
+          <h3 className="font-heading font-bold text-foreground mb-4">Post a Reply</h3>
+          <div className="space-y-3">
+            <Input
+              placeholder="Your name (optional)"
+              value={authorName}
+              onChange={(e) => setAuthorName(e.target.value)}
+              className="bg-background/50 border-border/50 rounded-xl h-11 text-foreground placeholder:text-muted-foreground"
+            />
+            <Textarea
+              placeholder="Write your reply..."
+              value={replyBody}
+              onChange={(e) => setReplyBody(e.target.value)}
+              rows={4}
+              className="bg-background/50 border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground resize-none"
+            />
+            <Button
+              onClick={submitReply}
+              disabled={submitting}
+              className="bg-accent hover:bg-accent/90 text-accent-foreground rounded-xl h-11 font-semibold px-6"
+            >
+              {submitting ? "Posting..." : "Post Reply"}
+              {!submitting && <Send className="w-4 h-4 ml-2" />}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
