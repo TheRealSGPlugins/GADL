@@ -1,0 +1,39 @@
+{
+  "name": "ForumTopic",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "body": {
+      "type": "string",
+      "title": "Body"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "author_name": {
+      "type": "string",
+      "title": "Author Name"
+    },
+    "replies_count": {
+      "type": "number",
+      "title": "Replies",
+      "default": 0
+    },
+    "views_count": {
+      "type": "number",
+      "title": "Views",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "body"
+  ]
+}
