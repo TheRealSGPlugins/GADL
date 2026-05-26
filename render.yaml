@@ -1,0 +1,18 @@
+services:
+  - type: web
+    runtime: static
+    name: nexusautomate-base44
+    plan: free
+    branch: main
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    autoDeployTrigger: commit
+    envVars:
+      - key: VITE_BASE44_APP_ID
+        value: 6a15b5a067547dba3657abae
+      - key: VITE_BASE44_APP_BASE_URL
+        value: https://nexus-automate-copy-3657abae.base44.app
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
