@@ -81,9 +81,15 @@ export default function Forum() {
 
   const loadTopics = async () => {
     setLoading(true);
-    const data = await base44.entities.ForumTopic.list("-created_date", 50);
-    setTopics(data);
-    setLoading(false);
+    try {
+      const data = await base44.entities.ForumTopic.list("-created_date", 50);
+      setTopics(data);
+    } catch (error) {
+      setTopics([]);
+      toast.error(error?.message || "Failed to load forum topics.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resolvedAuthorName =

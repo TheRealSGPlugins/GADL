@@ -35,16 +35,23 @@ export default function ForumTopicDetail() {
 
   const loadData = async () => {
     setLoading(true);
-    const [loadedTopic, loadedReplies] = await Promise.all([
-      base44.entities.ForumTopic.get(topicId),
-      base44.entities.ForumReply.filter({ topic_id: topicId }, "created_date", 100),
-    ]);
-    setTopic(loadedTopic);
-    setReplies(loadedReplies);
-    base44.entities.ForumTopic.update(topicId, {
-      views_count: (loadedTopic.views_count || 0) + 1,
-    });
-    setLoading(false);
+    try {
+      const [loadedTopic, loadedReplies] = await Promise.all([
+        base44.entities.ForumTopic.get(topicId),
+        base44.entities.ForumReply.filter({ topic_id: topicId }, "created_date", 100),
+      ]);
+      setTopic(loadedTopic);
+      setReplies(loadedReplies);
+      base44.entities.ForumTopic.update(topicId, {
+        views_count: (loadedTopic.views_count || 0) + 1,
+      }).catch(() => {});
+    } catch (error) {
+      setTopic(null);
+      setReplies([]);
+      toast.error(error?.message || "Failed to load topic.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resolvedAuthorName =
