@@ -1,13 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
-import { base44 } from "@/api/base44Client";
 import { Menu, X, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import BrandMark from "@/components/BrandMark";
 
 export default function Navbar() {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -22,7 +21,6 @@ export default function Navbar() {
     { to: "/docs", label: "Docs" },
     { to: "/updates", label: "Updates" },
     { to: "/achievements", label: "Achievements" },
-    { to: "/forum", label: "Forum" },
     { to: "/download", label: "Download" },
   ];
 
@@ -63,13 +61,24 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-3">
           {user ? (
-            <button
-              onClick={() => base44.auth.logout()}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </button>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <img
+                  src={user.avatar}
+                  alt=""
+                  className="w-7 h-7 rounded-full"
+                />
+                <span className="text-sm font-medium text-foreground">
+                  {user.global_name || user.username}
+                </span>
+              </div>
+              <button
+                onClick={logout}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
           ) : (
             <Link
               to="/login"

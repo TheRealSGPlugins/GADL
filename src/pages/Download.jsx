@@ -1,6 +1,5 @@
 import Navbar from "../components/Navbar";
 import { useAuth } from "@/lib/AuthContext";
-import { base44 } from "@/api/base44Client";
 import { Download as DownloadIcon, Lock, ShieldCheck, Loader2 } from "lucide-react";
 
 // Set this to the real client download URL (e.g. a release asset or hosted file).
@@ -10,7 +9,7 @@ const VERSION = "v1";
 const FILE_LABEL = "OmniRune Client";
 
 export default function Download() {
-  const { user, isAuthenticated, isLoadingAuth } = useAuth();
+  const { user, isAuthenticated, isLoadingAuth, loginWithDiscord } = useAuth();
 
   return (
     <div className="min-h-screen bg-background font-body text-foreground">
@@ -44,13 +43,13 @@ export default function Download() {
               </div>
               <h2 className="font-heading text-xl font-bold">Verification required</h2>
               <p className="mt-2 text-muted-foreground">
-                Sign in to verify your access and unlock the client download.
+                Sign in with Discord to verify your access and unlock the client download.
               </p>
               <button
-                onClick={() => window.location.href = `${import.meta.env.BASE_URL}login`}
-                className="mt-6 inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-5 py-2.5 rounded-full transition-all hover:scale-[1.03]"
+                onClick={loginWithDiscord}
+                className="mt-6 inline-flex items-center gap-2 bg-[#5865F2] hover:bg-[#4752C4] text-white font-semibold px-5 py-2.5 rounded-full transition-all hover:scale-[1.03]"
               >
-                <ShieldCheck className="w-4 h-4" /> Sign in to verify
+                <ShieldCheck className="w-4 h-4" /> Sign in with Discord
               </button>
             </div>
           ) : (
@@ -61,13 +60,8 @@ export default function Download() {
               <p className="text-sm text-muted-foreground">
                 Verified as{" "}
                 <span className="text-foreground font-medium">
-                  {user?.full_name || user?.email || "member"}
+                  {user?.global_name || user?.username || "member"}
                 </span>
-                {user?.role === "admin" && (
-                  <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border border-accent/30 bg-accent/15 text-accent">
-                    admin
-                  </span>
-                )}
               </p>
 
               <h2 className="mt-4 font-heading text-2xl font-bold">{FILE_LABEL}</h2>
