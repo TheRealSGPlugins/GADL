@@ -16,6 +16,7 @@ import SDKDocs from './pages/SDKDocs';
 import Forum from './pages/Forum';
 import Updates from './pages/Updates';
 import Achievements from './pages/Achievements';
+import Download from './pages/Download';
 import ForumTopicDetail from './pages/ForumTopicDetail';
 
 const AuthenticatedApp = () => {
@@ -48,6 +49,7 @@ const AuthenticatedApp = () => {
       <Route path="/docs" element={<SDKDocs />} />
       <Route path="/updates" element={<Updates />} />
       <Route path="/achievements" element={<Achievements />} />
+      <Route path="/download" element={<Download />} />
       <Route path="/forum" element={<Forum />} />
       <Route path="/forum/:topicId" element={<ForumTopicDetail />} />
       <Route path="*" element={<PageNotFound />} />

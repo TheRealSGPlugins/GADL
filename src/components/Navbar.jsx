@@ -23,6 +23,7 @@ export default function Navbar() {
     { to: "/updates", label: "Updates" },
     { to: "/achievements", label: "Achievements" },
     { to: "/forum", label: "Forum" },
+    { to: "/download", label: "Download" },
   ];
 
   const isActive = (path) =>
