@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
-import { Trophy, Star, Rocket, Target, Award, Flame } from "lucide-react";
+import { Trophy, Star, Rocket, Target, Flame } from "lucide-react";
 
 // Project milestones. Swap these for live data once the achievements
 // source is wired up.
@@ -8,7 +8,7 @@ const milestones = [
   {
     icon: Rocket,
     title: "Project Launch",
-    desc: "OmniRune kicked off as an open automation project for the community.",
+    desc: "OmniRune development kicked off.",
     status: "done",
   },
   {
@@ -25,15 +25,9 @@ const milestones = [
   },
   {
     icon: Flame,
-    title: "Community Forum",
-    desc: "A place for builders to share techniques and get help.",
+    title: "Continuous Updates",
+    desc: "Ongoing releases and fixes shipping into the client.",
     status: "in-progress",
-  },
-  {
-    icon: Award,
-    title: "1,000 Members",
-    desc: "Grow the community to a thousand active builders.",
-    status: "upcoming",
   },
 ];
 

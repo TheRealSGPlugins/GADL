@@ -122,8 +122,27 @@
     filter: blur(8px);
   }
 
+  /* Twinkling/pulsing dots in the hero background */
+  .omni-dot {
+    position: absolute;
+    border-radius: 9999px;
+    background: hsl(282 90% 78%);
+    box-shadow: 0 0 8px 1px hsl(282 90% 70% / 0.8);
+    opacity: 0;
+    animation: omni-twinkle var(--dur, 4s) ease-in-out var(--delay, 0s) infinite;
+    will-change: opacity, transform;
+  }
+
   .omni-card {
     @apply rounded-2xl border border-border bg-card/60 backdrop-blur-sm;
     box-shadow: 0 1px 0 0 hsl(280 60% 70% / 0.06) inset, 0 20px 50px -25px hsl(282 80% 30% / 0.5);
   }
+}
+@keyframes omni-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.6); }
+  50% { opacity: 0.9; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .omni-dot { animation: none; opacity: 0.4; }
 }

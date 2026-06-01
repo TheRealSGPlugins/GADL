@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import BrandMark from "../components/BrandMark";
+import PulseDots from "../components/PulseDots";
 import {
   ArrowRight,
   Code2,
@@ -57,6 +58,7 @@ export default function Home() {
       {/* ===== Hero ===== */}
       <section className="relative pt-28 pb-40 px-6">
         <div className="absolute inset-0 omni-grid pointer-events-none" />
+        <PulseDots count={44} />
 
         <div className="relative max-w-3xl mx-auto text-center">
           {/* logo */}
