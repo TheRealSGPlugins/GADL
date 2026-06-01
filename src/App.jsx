@@ -63,7 +63,7 @@ function App() {
   return (
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
-        <Router>
+        <Router basename="/GADL">
           <AuthenticatedApp />
         </Router>
         <Toaster />
