@@ -47,7 +47,7 @@ export default function Download() {
                 Sign in to verify your access and unlock the client download.
               </p>
               <button
-                onClick={() => base44.auth.redirectToLogin(`${import.meta.env.BASE_URL}download`)}
+                onClick={() => window.location.href = `${import.meta.env.BASE_URL}login`}
                 className="mt-6 inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-5 py-2.5 rounded-full transition-all hover:scale-[1.03]"
               >
                 <ShieldCheck className="w-4 h-4" /> Sign in to verify
