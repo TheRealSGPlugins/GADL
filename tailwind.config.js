@@ -5,8 +5,8 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			heading: ['Inter', 'sans-serif'],
-  			body: ['Inter', 'sans-serif'],
+  			heading: ['DM Sans', 'sans-serif'],
+  			body: ['DM Sans', 'sans-serif'],
   			mono: ['JetBrains Mono', 'monospace'],
   		},
   		borderRadius: {
