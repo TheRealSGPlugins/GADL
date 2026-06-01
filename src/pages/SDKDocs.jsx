@@ -17,9 +17,9 @@ const sections = [
 const docs = {
   "getting-started": {
     title: "Getting Started",
-    content: "Welcome to the GADL SDK. This guide walks you through the core concepts of game automation development. The SDK provides a robust framework for building, testing, and deploying automation scripts across multiple game environments.",
+    content: "Welcome to the OmniRune SDK. This guide walks you through the core concepts of game automation development. The SDK provides a robust framework for building, testing, and deploying automation scripts across multiple game environments.",
     code: `// Quick start
-import { GameEngine } from '@gadl/core';
+import { GameEngine } from '@omnirune/core';
 
 const engine = new GameEngine();
 await engine.connect('your-server-id');
@@ -27,20 +27,20 @@ console.log('Connected!');`,
   },
   installation: {
     title: "Installation",
-    content: "Install the GADL SDK via your preferred package manager. The SDK requires Node.js 18+ and supports both ESM and CommonJS module formats.",
+    content: "Install the OmniRune SDK via your preferred package manager. The SDK requires Node.js 18+ and supports both ESM and CommonJS module formats.",
     code: `# npm
-npm install @gadl/core @gadl/cli
+npm install @omnirune/core @omnirune/cli
 
 # yarn
-yarn add @gadl/core @gadl/cli
+yarn add @omnirune/core @omnirune/cli
 
 # pnpm
-pnpm add @gadl/core @gadl/cli`,
+pnpm add @omnirune/core @omnirune/cli`,
   },
   configuration: {
     title: "Configuration",
-    content: "Configure your automation environment with a gadl.config.js file at the project root. This file defines targets, execution modes, safety limits, and logging preferences.",
-    code: `// gadl.config.js
+    content: "Configure your automation environment with a omnirune.config.js file at the project root. This file defines targets, execution modes, safety limits, and logging preferences.",
+    code: `// omnirune.config.js
 export default {
   target: 'world-server-01',
   mode: 'development',
@@ -58,7 +58,7 @@ export default {
   "game-engine": {
     title: "GameEngine API",
     content: "The GameEngine class is the primary interface for interacting with game environments. It manages connections, state tracking, and script execution with built-in safety mechanisms.",
-    code: `import { GameEngine } from '@gadl/core';
+    code: `import { GameEngine } from '@omnirune/core';
 
 const engine = new GameEngine({
   target: 'world-server-01',
@@ -81,7 +81,7 @@ await engine.disconnect();`,
   automation: {
     title: "Automation Scripts",
     content: "Build reusable automation scripts with the Script API. Scripts support conditional logic, error recovery, and can be composed together for complex workflows.",
-    code: `import { Script, Condition } from '@gadl/core';
+    code: `import { Script, Condition } from '@omnirune/core';
 
 const harvestScript = new Script('harvest_loop')
   .step('navigate', { target: 'field_01' })
@@ -115,7 +115,7 @@ engine.on('scriptComplete', (result) => {
   utilities: {
     title: "Utilities",
     content: "Helper functions for common automation tasks including timing, random delays, coordinate math, and inventory management.",
-    code: `import { delay, randomDelay, distance } from '@gadl/utils';
+    code: `import { delay, randomDelay, distance } from '@omnirune/utils';
 
 // Human-like random delay (800-1200ms)
 await randomDelay(800, 1200);
@@ -127,7 +127,7 @@ const d = distance(
 );
 
 // Batch inventory operations
-import { Inventory } from '@gadl/utils';
+import { Inventory } from '@omnirune/utils';
 const filtered = Inventory.filter(items, {
   type: 'resource',
   minQuantity: 5

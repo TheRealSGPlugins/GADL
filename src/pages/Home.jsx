@@ -1,99 +1,161 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { ArrowRight, Code2, Users, BookOpen, Zap } from "lucide-react";
+import BrandMark from "../components/BrandMark";
+import {
+  ArrowRight,
+  Code2,
+  Users,
+  BookOpen,
+  Trophy,
+  Sparkles,
+} from "lucide-react";
 import { motion } from "framer-motion";
 
 const features = [
-  { icon: Code2, title: "SDK & Tooling", desc: "Comprehensive SDK documentation with copy-paste code snippets for rapid automation development." },
-  { icon: Users, title: "Community Forum", desc: "Connect with fellow developers, ask questions, and share your automation techniques." },
-  { icon: BookOpen, title: "Learning Paths", desc: "Structured guides from beginner to advanced game automation concepts." },
-  { icon: Zap, title: "Live Examples", desc: "Interactive code examples you can modify and test in real-time." },
+  {
+    icon: Code2,
+    title: "SDK & Tooling",
+    desc: "Documented SDK with copy-paste snippets for building OSRS automation fast.",
+  },
+  {
+    icon: BookOpen,
+    title: "Living Documentation",
+    desc: "Up-to-date docs on the client and the work shipping into it, kept in sync with the repo.",
+  },
+  {
+    icon: Trophy,
+    title: "Updates & Achievements",
+    desc: "Track every release, milestone, and win as the project evolves.",
+  },
+  {
+    icon: Users,
+    title: "Community Forum",
+    desc: "Ask questions, share techniques, and hold discussions with other builders.",
+  },
 ];
+
+// Decorative corner markers used in the reference design
+function Marker({ className = "" }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      className={`w-3.5 h-3.5 text-accent/40 ${className}`}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+    >
+      <path d="M3 3 L13 13 M13 3 L3 13" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background font-body">
+    <div className="min-h-screen bg-background font-body text-foreground overflow-hidden">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent pointer-events-none" />
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+      {/* ===== Hero ===== */}
+      <section className="relative pt-28 pb-40 px-6">
+        <div className="absolute inset-0 omni-grid pointer-events-none" />
+
+        <div className="relative max-w-3xl mx-auto text-center">
+          {/* logo */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.5 }}
+            className="flex justify-center mb-16"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-semibold tracking-wide mb-6">
-              <Zap className="w-3.5 h-3.5" /> GAME AUTOMATION DEV
-            </div>
-            <h1 className="font-heading text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] text-foreground">
-              GAME AUTOMATION<br /><span className="text-accent">LEARNING ZONE</span>
-            </h1>
-            <p className="mt-6 text-lg text-muted-foreground max-w-lg leading-relaxed">
-              The definitive learning space for Game Automation Development. Master SDKs, build tools, and connect with a community of builders.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                to="/docs"
-                className="group inline-flex items-center gap-2.5 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-7 py-3.5 rounded-2xl transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-accent/20"
-              >
-                Start Learning
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-              <Link
-                to="/forum"
-                className="inline-flex items-center gap-2.5 bg-card hover:bg-secondary text-foreground font-semibold px-7 py-3.5 rounded-2xl border border-border transition-all duration-200 hover:scale-[1.02]"
-              >
-                Join Community
-              </Link>
-            </div>
+            <BrandMark className="w-14 h-14" />
+          </motion.div>
+
+          {/* eyebrow */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex items-center justify-center gap-3 mb-8 text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground"
+          >
+            <span className="h-px w-10 bg-gradient-to-r from-transparent to-accent/50" />
+            Game Automation SDK
+            <span className="h-px w-10 bg-gradient-to-l from-transparent to-accent/50" />
+          </motion.div>
+
+          {/* relative wrapper for markers */}
+          <div className="relative">
+            <Marker className="absolute -left-6 -top-2 hidden sm:block" />
+            <Marker className="absolute -right-6 -top-2 hidden sm:block" />
+
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="font-heading font-extrabold tracking-tight leading-[0.95] text-7xl sm:text-8xl md:text-[8.5rem] omni-gradient-text"
+            >
+              OmniRune
+            </motion.h1>
+
+            <Marker className="absolute -left-6 -bottom-4 hidden sm:block" />
+            <Marker className="absolute -right-6 -bottom-4 hidden sm:block" />
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="mt-8 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed"
+          >
+            The documentation, updates, and community home for the OmniRune
+            automation project. Read the docs, follow every release, and join the
+            discussion.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="mt-10 flex flex-wrap items-center justify-center gap-4"
+          >
+            <Link
+              to="/docs"
+              className="group inline-flex items-center gap-2.5 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-7 py-3.5 rounded-full transition-all duration-200 hover:scale-[1.03] shadow-lg shadow-primary/20"
+            >
+              Read the Docs
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+            <Link
+              to="/forum"
+              className="inline-flex items-center gap-2.5 bg-card/60 hover:bg-secondary text-foreground font-semibold px-7 py-3.5 rounded-full border border-border backdrop-blur-sm transition-all duration-200 hover:scale-[1.03]"
+            >
+              Join the Forum
+            </Link>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="hidden lg:block"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground"
           >
-            <div className="relative">
-              <div className="absolute -inset-4 bg-accent/10 rounded-3xl blur-2xl" />
-              <div className="relative bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl p-6 font-mono text-sm">
-                <div className="flex gap-2 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-destructive/60" />
-                  <div className="w-3 h-3 rounded-full bg-chart-4" />
-                  <div className="w-3 h-3 rounded-full bg-chart-2/60" />
-                </div>
-                <pre className="text-chart-2 leading-relaxed overflow-x-auto"><code>{`import { GameEngine } from '@gadl/core';
-
-const bot = new GameEngine({
-  target: 'world-server-01',
-  mode: 'automation',
-  precision: 0.98
-});
-
-await bot.initialize();
-await bot.execute('harvest_loop', {
-  interval: 2500,
-  safeMode: true
-});
-
-console.log('✓ Automation active');`}</code></pre>
-              </div>
-            </div>
+            <Sparkles className="w-4 h-4 text-accent" />
+            Built and maintained with continuous updates from the source repo
           </motion.div>
         </div>
+
+        {/* glowing horizon */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140%] h-48 omni-horizon pointer-events-none" />
       </section>
 
-      {/* Features */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
+      {/* ===== Features ===== */}
+      <section className="relative py-24 px-6">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="font-heading text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
-              Everything You Need
+            <h2 className="font-heading text-3xl md:text-5xl font-extrabold tracking-tight">
+              Everything in one place
             </h2>
-            <p className="mt-3 text-muted-foreground text-lg max-w-md mx-auto">
-              Tools, docs, and community — all in one place.
+            <p className="mt-4 text-muted-foreground text-lg max-w-md mx-auto">
+              Docs, releases, milestones, and community — for the whole project.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -101,26 +163,34 @@ console.log('✓ Automation active');`}</code></pre>
               <motion.div
                 key={f.title}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 * i }}
-                className="group bg-card/60 backdrop-blur-xl border border-border/50 rounded-3xl p-6 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/5 transition-all duration-300 hover:scale-[1.02]"
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.08 * i }}
+                className="group omni-card p-6 hover:border-accent/40 transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-11 h-11 rounded-2xl bg-accent/10 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
                   <f.icon className="w-5 h-5 text-accent" />
                 </div>
-                <h3 className="font-heading font-bold text-foreground mb-2">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                <h3 className="font-heading font-bold mb-2">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {f.desc}
+                </p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border/50 py-8 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <span className="font-heading font-bold text-foreground"><span className="text-accent">G</span>ADL<span className="text-accent">.</span></span>
-          <span>© 2026 Game Automation Dev Learningspace</span>
+      {/* ===== Footer ===== */}
+      <footer className="border-t border-border/60 py-10 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2.5">
+            <BrandMark className="w-7 h-7" />
+            <span className="font-heading font-bold text-foreground">
+              Omni<span className="text-accent">Rune</span>
+            </span>
+          </div>
+          <span>© {new Date().getFullYear()} OmniRune. All rights reserved.</span>
         </div>
       </footer>
     </div>
