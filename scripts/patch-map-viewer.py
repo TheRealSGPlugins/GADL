@@ -25,8 +25,7 @@ text = viewer_file.read_text().replace(
 )
 viewer_file.write_text(text)
 
-# Keep the external spawn injection as a fallback for cache revisions that do not
-# provide embedded NPC spawns for this square.
+# Fallback spawn for cache revisions that do not embed NPC spawns in this square.
 spawn_file = ROOT / "src/mapviewer/data/npc/NpcSpawn.ts"
 text = spawn_file.read_text()
 old = '''export async function fetchNpcSpawns(url: string): Promise<NpcSpawn[]> {
@@ -38,9 +37,7 @@ new = '''export async function fetchNpcSpawns(url: string): Promise<NpcSpawn[]> 
     const spawns: NpcSpawn[] = await response.json();
 
     if (url === npcSpawnsOsrsUrl) {
-        spawns.push({ id: 310, name: "OmniRune Demo A", x: 3230, y: 3218, level: 0 });
-        spawns.push({ id: 310, name: "OmniRune Demo B", x: 3231, y: 3218, level: 0 });
-        spawns.push({ id: 310, name: "OmniRune Demo C", x: 3232, y: 3218, level: 0 });
+        spawns.push({ id: 3105, name: "OmniRune Player", x: 3231, y: 3218, level: 0 });
     }
 
     return spawns;
@@ -49,9 +46,10 @@ if old not in text:
     raise SystemExit("NpcSpawn patch point not found")
 spawn_file.write_text(text.replace(old, new))
 
-# Current OSRS cache squares can contain their own NPC spawn list. Inject the
-# demo after the renderer has selected cache-vs-external spawns so it cannot be
-# skipped by the cache-spawn branch.
+# Current OSRS cache squares can contain their own NPC spawn list. Inject ONE
+# OmniRune character after cache-vs-external selection so it always reaches the
+# renderer. It then uses the viewer's ORIGINAL NPC movement/pathfinding code —
+# no custom path queue — so walls, fences and NPC collision are respected.
 loader = ROOT / "src/mapviewer/webgl/loader/SdMapDataLoader.ts"
 text = loader.read_text()
 needle = '''        const npcSpawnGroups = createNpcSpawnGroups(
@@ -60,12 +58,9 @@ needle = '''        const npcSpawnGroups = createNpcSpawnGroups(
             sceneBuf,
             npcSpawns,
         );'''
-replacement = '''        // OmniRune player-model proof: inject into the final spawn list.
-        // 3230-3232,3218 are in map square 50,50.
+replacement = '''        // OmniRune player-model proof: one custom character in map square 50,50.
         if (mapX === 50 && mapY === 50 && maxLevel >= 0) {
-            npcSpawns.push({ id: 3105, name: "OmniRune Demo A", x: 3230, y: 3218, level: 0 });
-            npcSpawns.push({ id: 3105, name: "OmniRune Demo B", x: 3231, y: 3218, level: 0 });
-            npcSpawns.push({ id: 3105, name: "OmniRune Demo C", x: 3232, y: 3218, level: 0 });
+            npcSpawns.push({ id: 3105, name: "OmniRune Player", x: 3231, y: 3218, level: 0 });
         }
 
         const npcSpawnGroups = createNpcSpawnGroups(
@@ -78,64 +73,9 @@ if needle not in text:
     raise SystemExit("SdMapDataLoader final NPC spawn patch point not found")
 loader.write_text(text.replace(needle, replacement))
 
-npc_file = ROOT / "src/mapviewer/webgl/npc/Npc.ts"
-text = npc_file.read_text()
-old_fields = '    serverPathLength: number = 0;\n\n    x: number;'
-new_fields = (
-    '    serverPathLength: number = 0;\n\n'
-    '    omniDemoTick: number = 0;\n'
-    '    omniDemoStep: number = 0;\n\n'
-    '    x: number;'
-)
-if old_fields not in text:
-    raise SystemExit("Npc field patch point not found")
-text = text.replace(old_fields, new_fields)
-
-old_method = '''    updateServerMovement(
-        pathfinder: Pathfinder,
-        borderSize: number,
-        collisionMaps: CollisionMap[],
-    ) {
-        const size = this.getSize();'''
-new_method = '''    updateServerMovement(
-        pathfinder: Pathfinder,
-        borderSize: number,
-        collisionMaps: CollisionMap[],
-    ) {
-        const size = this.getSize();
-
-        // Deterministic OmniRune demo movement. Queue ONE adjacent tile at a
-        // time so updateMovement interpolates across it using the normal walk
-        // animation instead of snapping several tiles to a distant waypoint.
-        if (
-            this.npcType.id === 3105 &&
-            this.spawnY === 18 &&
-            this.spawnX >= 30 &&
-            this.spawnX <= 32
-        ) {
-            this.omniDemoTick++;
-            if (this.pathLength === 0 && this.omniDemoTick >= 6) {
-                this.omniDemoTick = 0;
-
-                // 16-tile clockwise rectangle: 4 east, 4 north, 4 west, 4 south.
-                const phase = this.omniDemoStep % 16;
-                let dir = 4; // east
-                if (phase >= 4 && phase < 8) {
-                    dir = 1; // north
-                } else if (phase >= 8 && phase < 12) {
-                    dir = 3; // west
-                } else if (phase >= 12) {
-                    dir = 6; // south
-                }
-
-                this.omniDemoStep++;
-                this.queuePathDir(dir, MovementType.WALK);
-            }
-            return;
-        }'''
-if old_method not in text:
-    raise SystemExit("Npc movement patch point not found")
-npc_file.write_text(text.replace(old_method, new_method))
+# Do NOT patch Npc.updateServerMovement. The single OmniRune character should
+# use the exact same collision-aware pathfinder and serverPath movement as every
+# normal NPC in the viewer.
 
 controls = ROOT / "src/mapviewer/MapViewerControls.tsx"
 text = controls.read_text()
@@ -172,7 +112,7 @@ schema_replacement = '''                "Go to coordinates": folder(
                             mapViewer.camera.updated = true;
                             mapViewer.updateSearchParams();
                         }),
-                        "OMNIRUNE DEMO": button(() => {
+                        "OMNIRUNE PLAYER": button(() => {
                             setGoToX(3231);
                             setGoToY(3218);
                             mapViewer.camera.pos[0] = 3231;
@@ -226,7 +166,7 @@ replacement = '''        <div className="max-height">
                 letterSpacing: "0.08em",
                 pointerEvents: "none",
             }}>
-                OMNIRUNE PLAYER DEMO — USE COORDS 3231, 3218
+                OMNIRUNE PLAYER — ONE COLLISION-AWARE TEST CHARACTER @ 3231, 3218
             </div>
             {loadingBarOverlay}'''
 if needle not in text:
@@ -240,4 +180,4 @@ text = downloader.read_text().replace(
 )
 downloader.write_text(text)
 
-print("Patched rs-map-viewer with smooth tile-by-tile OmniRune movement demo")
+print("Patched rs-map-viewer with one collision-aware OmniRune character")
