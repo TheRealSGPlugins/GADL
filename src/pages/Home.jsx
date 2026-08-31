@@ -10,7 +10,7 @@ import {
   Users,
 } from "lucide-react";
 
-const HERO_BG = `${import.meta.env.BASE_URL}omnirune-background.svg`;
+const HERO_BG = `${import.meta.env.BASE_URL}background.png`;
 
 const highlights = [
   {
