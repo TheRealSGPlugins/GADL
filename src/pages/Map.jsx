@@ -21,15 +21,16 @@ const MAX_ZOOM = 5;
 const MAX_NATIVE_ZOOM = 3;
 
 function tileCoordinates(coords) {
-  const unitsPerTile = 256 / Math.pow(2, coords.z);
-  const x = Math.round(coords.x * unitsPerTile);
-
-  // Leaflet's CRS.Simple Y axis is inverted. coords.y identifies the
-  // tile's top edge, while the RuneScape renderer names tiles from the
-  // bottom-left game square.
-  const negativeY = Math.round((coords.y + 1) * unitsPerTile);
-
-  return { x, negativeY };
+  // With L.CRS.Simple, RuneScape game coordinates line up with the
+  // wiki tile grid automatically:
+  //   zoom 2: 3200 / 64 = region 50
+  // Leaflet's Y tile coordinate is negative because north is positive
+  // in RuneScape. The wiki filename wants the positive bottom-left
+  // tile index, which is -y - 1.
+  return {
+    x: coords.x,
+    negativeY: -coords.y - 1,
+  };
 }
 
 class RuneScapeGridLayer extends L.GridLayer {
@@ -48,9 +49,8 @@ class RuneScapeGridLayer extends L.GridLayer {
     // The first URL is the current map-server layout. The fallbacks make
     // the page resilient to the two legacy layouts used by Cartography.
     const urls = [
-      `https://maps.runescape.wiki/osrs/versions/${MAP_VERSION}/map_icon_squares/${MAP_ID}/${coords.z}/${plane}_${x}_${negativeY}.png`,
-      `https://maps.runescape.wiki/osrs/versions/${MAP_VERSION}/map_icon_squares/${MAP_ID}/${coords.z}_${plane}_${x}_${negativeY}.png`,
       `https://maps.runescape.wiki/osrs/tiles/${MAP_ID}_${MAP_VERSION}/${coords.z}/${plane}_${x}_${negativeY}.png`,
+      `https://maps.runescape.wiki/osrs/versions/${MAP_VERSION}/map_icon_squares/${MAP_ID}/${coords.z}_${plane}_${x}_${negativeY}.png`,
     ];
 
     let attempt = 0;
@@ -89,6 +89,8 @@ function RuneScapeTiles({ plane, onStateChange }) {
       keepBuffer: 3,
       updateWhenIdle: false,
       updateWhenZooming: false,
+      bounds: L.latLngBounds([0, 0], [12800, 12800]),
+      noWrap: true,
       attribution:
         '&copy; <a href="https://oldschool.runescape.wiki/">OSRS Wiki</a> / Jagex map data',
     });
