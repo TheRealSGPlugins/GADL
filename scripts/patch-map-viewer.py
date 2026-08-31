@@ -1,6 +1,8 @@
 from pathlib import Path
 
 ROOT = Path(".rs-map-viewer")
+CUSTOM_NPC_ID = 65000
+BASE_NPC_ID = 3105
 
 caches = ROOT / "src/mapviewer/Caches.ts"
 text = caches.read_text()
@@ -25,21 +27,22 @@ text = viewer_file.read_text().replace(
 )
 viewer_file.write_text(text)
 
-# Inject exactly ONE OmniRune test character after the viewer has chosen its
-# modern cache NPC list versus the external JSON spawn list. This avoids the
-# duplicate copies caused by injecting in both places.
+# Give the OmniRune test actor its own synthetic NPC id so it can have a
+# separate model cache entry and visual treatment while still borrowing the
+# proven human rig + animations from Hans (3105).
 loader = ROOT / "src/mapviewer/webgl/loader/SdMapDataLoader.ts"
 text = loader.read_text()
-needle = '''        const npcSpawnGroups = createNpcSpawnGroups(
+spawn_needle = '''        const npcSpawnGroups = createNpcSpawnGroups(
             npcModelLoader,
             basTypeLoader,
             sceneBuf,
             npcSpawns,
         );'''
-replacement = '''        // OmniRune player-model proof: exactly one custom character.
-        if (mapX === 50 && mapY === 50 && maxLevel >= 0) {
-            npcSpawns.push({ id: 3105, name: "OmniRune Player", x: 3231, y: 3218, level: 0 });
-        }
+spawn_replacement = f'''        // Exactly one OmniRune-controlled test actor. Synthetic id keeps its
+        // appearance separate from every real NPC definition in the cache.
+        if (mapX === 50 && mapY === 50 && maxLevel >= 0) {{
+            npcSpawns.push({{ id: {CUSTOM_NPC_ID}, name: "OmniRune Player", x: 3231, y: 3218, level: 0 }});
+        }}
 
         const npcSpawnGroups = createNpcSpawnGroups(
             npcModelLoader,
@@ -47,9 +50,122 @@ replacement = '''        // OmniRune player-model proof: exactly one custom char
             sceneBuf,
             npcSpawns,
         );'''
-if needle not in text:
+if spawn_needle not in text:
     raise SystemExit("SdMapDataLoader final NPC spawn patch point not found")
-loader.write_text(text.replace(needle, replacement))
+text = text.replace(spawn_needle, spawn_replacement)
+
+npc_type_needle = '''    for (const spawns of groupedSpawns.values()) {
+        const npcType = npcModelLoader.npcTypeLoader.load(spawns[0].id);
+
+        const idleSeqId = npcType.getIdleSeqId(basTypeLoader);'''
+npc_type_replacement = f'''    for (const spawns of groupedSpawns.values()) {{
+        let npcType = npcModelLoader.npcTypeLoader.load(spawns[0].id);
+
+        if (spawns[0].id === {CUSTOM_NPC_ID}) {{
+            const baseNpcType = npcModelLoader.npcTypeLoader.load({BASE_NPC_ID});
+            npcType = Object.assign(
+                Object.create(Object.getPrototypeOf(baseNpcType)),
+                baseNpcType,
+                {{
+                    name: "OmniRune Player",
+                    widthScale: 136,
+                    heightScale: 136,
+                }},
+            );
+        }}
+
+        const idleSeqId = npcType.getIdleSeqId(basTypeLoader);'''
+if npc_type_needle not in text:
+    raise SystemExit("SdMapDataLoader NPC type patch point not found")
+text = text.replace(npc_type_needle, npc_type_replacement)
+loader.write_text(text)
+
+# Build a visibly custom blue/white model for only the OmniRune actor. We use
+# the existing human mesh/rig as geometry, but recolor the merged model before
+# lighting and cache it under its own key so normal Hans NPCs stay untouched.
+npc_model_loader = ROOT / "src/rs/config/npctype/NpcModelLoader.ts"
+text = npc_model_loader.read_text()
+cache_needle = '''        let model = this.modelCache.get(npcType.id);
+        if (!model) {'''
+cache_replacement = f'''        const isOmniRunePlayer = npcType.name === "OmniRune Player";
+        const modelCacheKey = isOmniRunePlayer ? -{CUSTOM_NPC_ID} : npcType.id;
+
+        let model = this.modelCache.get(modelCacheKey);
+        if (!model) {{'''
+if cache_needle not in text:
+    raise SystemExit("NpcModelLoader model-cache patch point not found")
+text = text.replace(cache_needle, cache_replacement)
+
+light_needle = '''            model = merged.light(
+                this.textureLoader,
+                npcType.ambient + 64,
+                npcType.contrast * 5 + 850,
+                -30,
+                -50,
+                -30,
+            );
+
+            this.modelCache.set(npcType.id, model);'''
+light_replacement = '''            if (isOmniRunePlayer) {
+                // Deliberately stylized electric-blue/white palette so the
+                // controlled actor cannot be mistaken for a world NPC.
+                for (let i = 0; i < merged.faceColors.length; i++) {
+                    const originalLightness = merged.faceColors[i] & 0x7f;
+                    const lightness = Math.max(28, Math.min(112, originalLightness));
+                    if (i % 4 === 0) {
+                        merged.faceColors[i] = Math.max(84, lightness);
+                    } else {
+                        merged.faceColors[i] = (40 << 10) | (7 << 7) | lightness;
+                    }
+                }
+            }
+
+            model = merged.light(
+                this.textureLoader,
+                npcType.ambient + 64,
+                npcType.contrast * 5 + 850,
+                -30,
+                -50,
+                -30,
+            );
+
+            this.modelCache.set(modelCacheKey, model);'''
+if light_needle not in text:
+    raise SystemExit("NpcModelLoader lighting patch point not found")
+text = text.replace(light_needle, light_replacement)
+npc_model_loader.write_text(text)
+
+# Runtime NPC objects are created on the main thread from the synthetic id too,
+# so resolve that id back to the same human movement definition there. This
+# keeps size, walkability and collision behavior identical to the proven test.
+webgl_square = ROOT / "src/mapviewer/webgl/WebGLMapSquare.ts"
+text = webgl_square.read_text()
+runtime_needle = '''        const npcs: Npc[] = [];
+        for (const npc of mapData.npcs) {
+            const npcType = npcTypeLoader.load(npc.id);
+
+            npcs.push('''
+runtime_replacement = f'''        const npcs: Npc[] = [];
+        for (const npc of mapData.npcs) {{
+            let npcType = npcTypeLoader.load(npc.id);
+            if (npc.id === {CUSTOM_NPC_ID}) {{
+                const baseNpcType = npcTypeLoader.load({BASE_NPC_ID});
+                npcType = Object.assign(
+                    Object.create(Object.getPrototypeOf(baseNpcType)),
+                    baseNpcType,
+                    {{
+                        name: "OmniRune Player",
+                        widthScale: 136,
+                        heightScale: 136,
+                    }},
+                );
+            }}
+
+            npcs.push('''
+if runtime_needle not in text:
+    raise SystemExit("WebGLMapSquare runtime NPC patch point not found")
+text = text.replace(runtime_needle, runtime_replacement)
+webgl_square.write_text(text)
 
 # Do NOT patch Npc.updateServerMovement. The OmniRune character uses the same
 # collision-aware movement/pathfinding implementation as normal viewer NPCs.
@@ -143,7 +259,7 @@ replacement = '''        <div className="max-height">
                 letterSpacing: "0.08em",
                 pointerEvents: "none",
             }}>
-                OMNIRUNE PLAYER — EXACTLY ONE TEST CHARACTER @ 3231, 3218
+                OMNIRUNE PLAYER — CUSTOM BLUE/WHITE ACTOR @ 3231, 3218
             </div>
             {loadingBarOverlay}'''
 if needle not in text:
@@ -157,4 +273,4 @@ text = downloader.read_text().replace(
 )
 downloader.write_text(text)
 
-print("Patched rs-map-viewer with exactly one OmniRune test character")
+print("Patched rs-map-viewer with one custom blue/white OmniRune actor")
