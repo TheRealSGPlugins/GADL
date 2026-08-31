@@ -65,6 +65,14 @@ jobs:
               'const workerPool = RenderDataWorkerPool.create(1);'
           )
           app.write_text(text)
+
+          downloader = Path(".rs-map-viewer/scripts/download-caches.js")
+          text = downloader.read_text()
+          text = text.replace(
+              '        await askQuestion("Downloading ~" + formatBytes(totalBytes) + ". Press enter to continue.");',
+              '        console.log("Downloading ~" + formatBytes(totalBytes) + ".");'
+          )
+          downloader.write_text(text)
           PY
 
       - name: Install rs-map-viewer dependencies
@@ -75,8 +83,7 @@ jobs:
 
       - name: Download latest OSRS cache for 3D renderer
         working-directory: .rs-map-viewer
-        run: |
-          printf '\n' | yarn download-caches 1
+        run: yarn download-caches 1
 
       - name: Build exact rs-map-viewer
         working-directory: .rs-map-viewer
