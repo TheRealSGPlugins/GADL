@@ -1,20 +1,21 @@
-// OmniRune brand mark — a stylized rune glyph inside a glowing rounded tile.
 export default function BrandMark({ className = "w-8 h-8" }) {
   return (
     <span
       className={`relative inline-flex items-center justify-center rounded-xl ${className}`}
       style={{
         background:
-          "linear-gradient(150deg, hsl(282 80% 22%), hsl(276 70% 14%))",
+          "linear-gradient(150deg, hsl(215 38% 16%), hsl(220 38% 8%))",
+        border: "1px solid hsl(202 100% 70% / 0.35)",
         boxShadow:
-          "inset 0 1px 0 hsl(280 80% 75% / 0.35), 0 8px 22px -8px hsl(282 85% 55% / 0.7)",
+          "inset 0 1px 0 hsl(210 40% 100% / 0.18), 0 8px 24px -8px hsl(202 100% 55% / 0.9)",
       }}
     >
       <svg viewBox="0 0 24 24" fill="none" className="w-[60%] h-[60%]">
         <defs>
           <linearGradient id="omniRuneGrad" x1="0" y1="0" x2="24" y2="24">
-            <stop offset="0%" stopColor="hsl(300 90% 82%)" />
-            <stop offset="100%" stopColor="hsl(276 90% 64%)" />
+            <stop offset="0%" stopColor="hsl(210 40% 100%)" />
+            <stop offset="45%" stopColor="hsl(198 100% 84%)" />
+            <stop offset="100%" stopColor="hsl(202 100% 58%)" />
           </linearGradient>
         </defs>
         <path
