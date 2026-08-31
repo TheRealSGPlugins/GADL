@@ -125,24 +125,61 @@
     box-shadow: 0 1px 0 0 hsl(210 40% 100% / 0.07) inset, 0 20px 50px -25px hsl(202 100% 35% / 0.48);
   }
 
-  .omni-hero-art {
-    animation: omniHeroPulse 4.4s ease-in-out infinite;
-    filter:
-      drop-shadow(0 0 10px rgba(255,255,255,0.22))
-      drop-shadow(0 0 28px rgba(0,170,255,0.36))
-      drop-shadow(0 0 70px rgba(0,102,255,0.18));
-    will-change: opacity, transform, filter;
+  .omni-reference-bg {
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 50% 38%, rgba(39, 204, 255, 0.20) 0%, rgba(0, 106, 255, 0.10) 22%, transparent 48%),
+      radial-gradient(ellipse at 50% 62%, rgba(0, 183, 255, 0.16) 0%, rgba(0, 86, 205, 0.08) 34%, transparent 68%),
+      radial-gradient(ellipse at 16% 46%, rgba(0, 208, 255, 0.10), transparent 38%),
+      radial-gradient(ellipse at 84% 46%, rgba(0, 144, 255, 0.10), transparent 38%),
+      linear-gradient(180deg, #02070d 0%, #020811 35%, #01040a 100%);
   }
 
-  .omni-hero-glow {
+  .omni-reference-beams {
     pointer-events: none;
+    opacity: 0.92;
     mix-blend-mode: screen;
     background:
-      radial-gradient(circle at 50% 43%, rgba(255,255,255,0.18), transparent 21%),
-      radial-gradient(circle at 36% 44%, rgba(0,174,255,0.20), transparent 32%),
-      radial-gradient(circle at 64% 44%, rgba(0,102,255,0.18), transparent 32%),
-      radial-gradient(ellipse at 50% 55%, rgba(0,145,255,0.12), transparent 54%);
-    animation: omniHeroGlowPulse 4.4s ease-in-out infinite;
+      linear-gradient(116deg, transparent 0 27%, rgba(89, 225, 255, 0.10) 30%, rgba(0, 163, 255, 0.05) 34%, transparent 40%),
+      linear-gradient(64deg, transparent 0 30%, rgba(125, 233, 255, 0.09) 33%, rgba(0, 136, 255, 0.04) 38%, transparent 44%),
+      conic-gradient(from 210deg at 50% 47%, transparent 0deg, rgba(30, 204, 255, 0.10) 12deg, transparent 26deg, transparent 326deg, rgba(0, 119, 255, 0.08) 340deg, transparent 360deg);
+    filter: blur(14px);
+    animation: omniBeamDrift 8s ease-in-out infinite alternate;
+  }
+
+  .omni-reference-stars {
+    pointer-events: none;
+    opacity: 0.62;
+    background-image:
+      radial-gradient(circle at 14% 17%, rgba(166,238,255,.85) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 24% 31%, rgba(84,205,255,.70) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 37% 19%, rgba(162,234,255,.60) 0 1px, transparent 1.7px),
+      radial-gradient(circle at 48% 29%, rgba(89,213,255,.65) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 63% 16%, rgba(174,239,255,.68) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 76% 34%, rgba(78,196,255,.72) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 88% 20%, rgba(166,238,255,.58) 0 1px, transparent 1.7px),
+      radial-gradient(circle at 18% 66%, rgba(99,214,255,.48) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 32% 74%, rgba(157,232,255,.54) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 67% 71%, rgba(98,211,255,.52) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 82% 63%, rgba(159,233,255,.50) 0 1px, transparent 1.8px);
+    animation: omniStarsPulse 4.8s ease-in-out infinite;
+  }
+
+  .omni-reference-vignette {
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at center, transparent 34%, rgba(0,0,0,0.18) 64%, rgba(0,0,0,0.70) 100%),
+      linear-gradient(180deg, rgba(0,0,0,0.18), transparent 18%, transparent 78%, rgba(0,0,0,0.55));
+  }
+
+  .omni-reference-logo {
+    opacity: 1;
+    filter:
+      drop-shadow(0 0 7px rgba(255,255,255,0.38))
+      drop-shadow(0 0 24px rgba(76,217,255,0.45))
+      drop-shadow(0 0 62px rgba(0,111,255,0.28));
+    animation: omniLogoFloat 5s ease-in-out infinite;
+    will-change: transform, filter;
   }
 }
 
@@ -151,31 +188,36 @@
   50% { opacity: 0.95; transform: scale(1); }
 }
 
-@keyframes omniHeroPulse {
+@keyframes omniLogoFloat {
   0%, 100% {
-    opacity: 0.42;
-    transform: translate(-50%, -50%) scale(0.98);
+    transform: translateY(0) scale(1);
     filter:
-      drop-shadow(0 0 6px rgba(255,255,255,0.12))
-      drop-shadow(0 0 18px rgba(0,174,255,0.24))
-      drop-shadow(0 0 48px rgba(0,102,255,0.12));
+      drop-shadow(0 0 7px rgba(255,255,255,0.34))
+      drop-shadow(0 0 22px rgba(76,217,255,0.40))
+      drop-shadow(0 0 58px rgba(0,111,255,0.24));
   }
   50% {
-    opacity: 0.68;
-    transform: translate(-50%, -50%) scale(1.035);
+    transform: translateY(-5px) scale(1.012);
     filter:
-      drop-shadow(0 0 18px rgba(255,255,255,0.48))
-      drop-shadow(0 0 38px rgba(0,174,255,0.52))
-      drop-shadow(0 0 90px rgba(0,102,255,0.26));
+      drop-shadow(0 0 12px rgba(255,255,255,0.55))
+      drop-shadow(0 0 34px rgba(76,217,255,0.58))
+      drop-shadow(0 0 84px rgba(0,111,255,0.34));
   }
 }
 
-@keyframes omniHeroGlowPulse {
-  0%, 100% { opacity: 0.28; transform: scale(0.96); filter: blur(22px); }
-  50% { opacity: 0.72; transform: scale(1.06); filter: blur(10px); }
+@keyframes omniBeamDrift {
+  0% { transform: scale(1) translateY(0); opacity: 0.72; }
+  100% { transform: scale(1.05) translateY(-10px); opacity: 1; }
+}
+
+@keyframes omniStarsPulse {
+  0%, 100% { opacity: 0.42; }
+  50% { opacity: 0.72; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .omni-dot { animation: none; opacity: 0.4; }
-  .omni-hero-art, .omni-hero-glow { animation: none; }
+  .omni-reference-logo,
+  .omni-reference-beams,
+  .omni-reference-stars { animation: none; }
 }
