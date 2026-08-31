@@ -12,7 +12,7 @@ export default function Navbar() {
     { to: "/download", label: "Download" },
     { to: "/docs", label: "Docs" },
     { to: "/updates", label: "Updates" },
-    { to: "/map", label: "Map" },
+    { to: "/map", label: "Map", nativeViewer: true },
   ];
 
   const isActive = (path) =>
@@ -32,6 +32,22 @@ export default function Navbar() {
         <a
           key={link.label}
           href="#features"
+          onClick={() => setMenuOpen(false)}
+          className={classes}
+        >
+          {link.label}
+        </a>
+      );
+    }
+
+    if (link.nativeViewer) {
+      const viewerBase =
+        window.location.hostname.endsWith("github.io") ? "/GADL/map/" : "/map/";
+
+      return (
+        <a
+          key={link.label}
+          href={viewerBase}
           onClick={() => setMenuOpen(false)}
           className={classes}
         >
