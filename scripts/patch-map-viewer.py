@@ -25,31 +25,9 @@ text = viewer_file.read_text().replace(
 )
 viewer_file.write_text(text)
 
-# Fallback spawn for cache revisions that do not embed NPC spawns in this square.
-spawn_file = ROOT / "src/mapviewer/data/npc/NpcSpawn.ts"
-text = spawn_file.read_text()
-old = '''export async function fetchNpcSpawns(url: string): Promise<NpcSpawn[]> {
-    const response = await fetch(url);
-    return await response.json();
-}'''
-new = '''export async function fetchNpcSpawns(url: string): Promise<NpcSpawn[]> {
-    const response = await fetch(url);
-    const spawns: NpcSpawn[] = await response.json();
-
-    if (url === npcSpawnsOsrsUrl) {
-        spawns.push({ id: 3105, name: "OmniRune Player", x: 3231, y: 3218, level: 0 });
-    }
-
-    return spawns;
-}'''
-if old not in text:
-    raise SystemExit("NpcSpawn patch point not found")
-spawn_file.write_text(text.replace(old, new))
-
-# Current OSRS cache squares can contain their own NPC spawn list. Inject ONE
-# OmniRune character after cache-vs-external selection so it always reaches the
-# renderer. It then uses the viewer's ORIGINAL NPC movement/pathfinding code —
-# no custom path queue — so walls, fences and NPC collision are respected.
+# Inject exactly ONE OmniRune test character after the viewer has chosen its
+# modern cache NPC list versus the external JSON spawn list. This avoids the
+# duplicate copies caused by injecting in both places.
 loader = ROOT / "src/mapviewer/webgl/loader/SdMapDataLoader.ts"
 text = loader.read_text()
 needle = '''        const npcSpawnGroups = createNpcSpawnGroups(
@@ -58,7 +36,7 @@ needle = '''        const npcSpawnGroups = createNpcSpawnGroups(
             sceneBuf,
             npcSpawns,
         );'''
-replacement = '''        // OmniRune player-model proof: one custom character in map square 50,50.
+replacement = '''        // OmniRune player-model proof: exactly one custom character.
         if (mapX === 50 && mapY === 50 && maxLevel >= 0) {
             npcSpawns.push({ id: 3105, name: "OmniRune Player", x: 3231, y: 3218, level: 0 });
         }
@@ -73,9 +51,8 @@ if needle not in text:
     raise SystemExit("SdMapDataLoader final NPC spawn patch point not found")
 loader.write_text(text.replace(needle, replacement))
 
-# Do NOT patch Npc.updateServerMovement. The single OmniRune character should
-# use the exact same collision-aware pathfinder and serverPath movement as every
-# normal NPC in the viewer.
+# Do NOT patch Npc.updateServerMovement. The OmniRune character uses the same
+# collision-aware movement/pathfinding implementation as normal viewer NPCs.
 
 controls = ROOT / "src/mapviewer/MapViewerControls.tsx"
 text = controls.read_text()
@@ -166,7 +143,7 @@ replacement = '''        <div className="max-height">
                 letterSpacing: "0.08em",
                 pointerEvents: "none",
             }}>
-                OMNIRUNE PLAYER — ONE COLLISION-AWARE TEST CHARACTER @ 3231, 3218
+                OMNIRUNE PLAYER — EXACTLY ONE TEST CHARACTER @ 3231, 3218
             </div>
             {loadingBarOverlay}'''
 if needle not in text:
@@ -180,4 +157,4 @@ text = downloader.read_text().replace(
 )
 downloader.write_text(text)
 
-print("Patched rs-map-viewer with one collision-aware OmniRune character")
+print("Patched rs-map-viewer with exactly one OmniRune test character")
