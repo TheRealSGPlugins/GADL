@@ -221,3 +221,91 @@
   .omni-reference-beams,
   .omni-reference-stars { animation: none; }
 }
+
+
+/* Joyerino hero background behavior, ported directly */
+.opduel-bg-pulse {
+  animation: opduelImagePulse 3.5s ease-in-out infinite;
+  filter:
+    drop-shadow(0 0 8px rgba(255, 255, 255, 0.25))
+    drop-shadow(0 0 18px rgba(0, 110, 255, 0.25));
+}
+
+.opduel-white-pulse {
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 30% 50%, rgba(0, 110, 255, 0.12), transparent 35%),
+    radial-gradient(circle at 70% 50%, rgba(0, 110, 255, 0.12), transparent 35%);
+  animation: opduelWhitePulse 3.5s ease-in-out infinite;
+}
+
+@keyframes opduelImagePulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 5px rgba(255, 255, 255, 0.15))
+      drop-shadow(0 0 12px rgba(0, 110, 255, 0.20));
+    opacity: 0.38;
+  }
+
+  50% {
+    filter:
+      drop-shadow(0 0 18px rgba(255, 255, 255, 0.65))
+      drop-shadow(0 0 35px rgba(0, 110, 255, 0.45));
+    opacity: 0.58;
+  }
+}
+
+@keyframes opduelWhitePulse {
+  0%, 100% {
+    opacity: 0.12;
+    transform: scale(0.96);
+    filter: blur(18px);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(1.06);
+    filter: blur(8px);
+  }
+}
+
+.btn-neon-blue {
+  background: #0c67ff;
+  color: #ffffff !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 1rem 2rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 0 15px rgba(12, 103, 255, 0.4);
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-neon-blue:hover {
+  color: #ffffff !important;
+  box-shadow: 0 0 25px rgba(12, 103, 255, 0.6);
+  background: #287cff;
+  transform: translateY(-1px);
+}
+
+.btn-outline-blue {
+  background: rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  border: 1px solid rgba(12, 103, 255, 0.9);
+  padding: 1rem 2rem;
+  border-radius: 0.375rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-blue:hover {
+  border-color: #4b8cff;
+  background: rgba(12, 103, 255, 0.12);
+  transform: translateY(-1px);
+}
