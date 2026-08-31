@@ -3,23 +3,20 @@ import { MessageSquare } from "lucide-react";
 
 export default function Forum() {
   return (
-    <div className="min-h-screen bg-background font-body text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-
-      <header className="relative pt-28 pb-12 px-6 overflow-hidden">
-        <div className="absolute inset-0 omni-grid pointer-events-none" />
-        <div className="relative max-w-3xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            <MessageSquare className="w-4 h-4 text-accent" /> Community
+      <main className="mx-auto flex min-h-[80vh] max-w-4xl items-center px-6 py-28">
+        <section className="w-full rounded-3xl border border-border/70 bg-card/60 p-8 text-center backdrop-blur-xl md:p-12">
+          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-accent/20 bg-accent/10">
+            <MessageSquare className="h-6 w-6 text-accent" />
           </div>
-          <h1 className="font-heading text-4xl md:text-5xl font-extrabold tracking-tight">
-            <span className="omni-gradient-text">Forum</span>
-          </h1>
-          <p className="mt-3 text-muted-foreground text-lg">
-            Coming soon — join our Discord in the meantime.
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent">Community</p>
+          <h1 className="mt-2 font-heading text-4xl font-black tracking-tight md:text-5xl">Forum</h1>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+            The OmniRune forum is being prepared. Community discussion is handled through Discord for now.
           </p>
-        </div>
-      </header>
+        </section>
+      </main>
     </div>
   );
 }
