@@ -1,226 +1,115 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import { Copy, Check, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { BookOpen, ChevronRight, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
 const sections = [
-  { id: "getting-started", label: "Getting Started" },
-  { id: "installation", label: "Installation" },
-  { id: "configuration", label: "Configuration" },
-  { id: "game-engine", label: "GameEngine API" },
-  { id: "automation", label: "Automation Scripts" },
-  { id: "events", label: "Event System" },
-  { id: "utilities", label: "Utilities" },
+  {
+    id: "overview",
+    label: "Overview",
+    title: "OmniRune SDK",
+    description: "The documentation is being consolidated around the native client, live game state, navigation, and scripting interfaces.",
+    points: ["Native client state", "Collision-aware navigation", "Lua scripting", "Runtime services"],
+  },
+  {
+    id: "navigation",
+    label: "Navigation",
+    title: "Navigation",
+    description: "Navigation accepts world coordinates and routes through the walker instead of hard-coding movement paths inside scripts.",
+    code: `omni.navigation.walkTo(3231, 3218)`,
+    points: ["World-coordinate destinations", "Walker-owned routing", "Collision-aware movement", "Readable navigation status"],
+  },
+  {
+    id: "state",
+    label: "Game State",
+    title: "Live Game State",
+    description: "Scripts consume decoded client state through stable SDK services rather than reading renderer or UI internals directly.",
+    points: ["Player position", "Inventory state", "NPC and object state", "Runtime status"],
+  },
+  {
+    id: "lua",
+    label: "Lua SDK",
+    title: "Lua SDK",
+    description: "Lua scripts are kept small by exposing game services as direct OmniRune APIs.",
+    code: `-- Move to a world tile\nomni.navigation.walkTo(3231, 3218)`,
+    points: ["Simple script entry points", "Shared SDK services", "Native runtime integration", "Reusable plugin logic"],
+  },
 ];
-
-const docs = {
-  "getting-started": {
-    title: "Getting Started",
-    content: "Welcome to the OmniRune SDK. This guide walks you through the core concepts of game automation development. The SDK provides a robust framework for building, testing, and deploying automation scripts across multiple game environments.",
-    code: `// Quick start
-import { GameEngine } from '@omnirune/core';
-
-const engine = new GameEngine();
-await engine.connect('your-server-id');
-console.log('Connected!');`,
-  },
-  installation: {
-    title: "Installation",
-    content: "Install the OmniRune SDK via your preferred package manager. The SDK requires Node.js 18+ and supports both ESM and CommonJS module formats.",
-    code: `# npm
-npm install @omnirune/core @omnirune/cli
-
-# yarn
-yarn add @omnirune/core @omnirune/cli
-
-# pnpm
-pnpm add @omnirune/core @omnirune/cli`,
-  },
-  configuration: {
-    title: "Configuration",
-    content: "Configure your automation environment with a omnirune.config.js file at the project root. This file defines targets, execution modes, safety limits, and logging preferences.",
-    code: `// omnirune.config.js
-export default {
-  target: 'world-server-01',
-  mode: 'development',
-  safety: {
-    maxActionsPerMinute: 60,
-    cooldownMs: 1000,
-    failsafe: true
-  },
-  logging: {
-    level: 'info',
-    output: './logs'
-  }
-};`,
-  },
-  "game-engine": {
-    title: "GameEngine API",
-    content: "The GameEngine class is the primary interface for interacting with game environments. It manages connections, state tracking, and script execution with built-in safety mechanisms.",
-    code: `import { GameEngine } from '@omnirune/core';
-
-const engine = new GameEngine({
-  target: 'world-server-01',
-  mode: 'automation',
-  precision: 0.98
-});
-
-// Lifecycle methods
-await engine.initialize();
-await engine.connect();
-
-// State management
-const state = engine.getState();
-console.log(state.position);  // { x, y, z }
-console.log(state.inventory); // Item[]
-
-// Cleanup
-await engine.disconnect();`,
-  },
-  automation: {
-    title: "Automation Scripts",
-    content: "Build reusable automation scripts with the Script API. Scripts support conditional logic, error recovery, and can be composed together for complex workflows.",
-    code: `import { Script, Condition } from '@omnirune/core';
-
-const harvestScript = new Script('harvest_loop')
-  .step('navigate', { target: 'field_01' })
-  .step('interact', { action: 'harvest' })
-  .step('wait', { ms: 2500 })
-  .condition(
-    Condition.inventoryFull(),
-    Script.goto('deposit')
-  )
-  .loop();
-
-await engine.execute(harvestScript);`,
-  },
-  events: {
-    title: "Event System",
-    content: "The event system provides real-time hooks into engine state changes, errors, and custom triggers. Use events for monitoring, logging, and reactive automation patterns.",
-    code: `engine.on('stateChange', (prev, next) => {
-  console.log('State updated:', next);
-});
-
-engine.on('error', (err) => {
-  console.error('Engine error:', err.message);
-  engine.recover(); // auto-recovery
-});
-
-engine.on('scriptComplete', (result) => {
-  console.log(\`Script \${result.name} finished\`);
-  console.log(\`Actions: \${result.actionCount}\`);
-});`,
-  },
-  utilities: {
-    title: "Utilities",
-    content: "Helper functions for common automation tasks including timing, random delays, coordinate math, and inventory management.",
-    code: `import { delay, randomDelay, distance } from '@omnirune/utils';
-
-// Human-like random delay (800-1200ms)
-await randomDelay(800, 1200);
-
-// Calculate distance between points
-const d = distance(
-  { x: 10, y: 20 },
-  { x: 50, y: 60 }
-);
-
-// Batch inventory operations
-import { Inventory } from '@omnirune/utils';
-const filtered = Inventory.filter(items, {
-  type: 'resource',
-  minQuantity: 5
-});`,
-  },
-};
 
 function CodeBlock({ code }) {
   const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
+  if (!code) return null;
+
+  const copy = async () => {
+    await navigator.clipboard.writeText(code);
     setCopied(true);
-    toast.success("Copied to clipboard");
-    setTimeout(() => setCopied(false), 2000);
+    toast.success("Copied");
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="relative group mt-6">
-      <div className="bg-background/80 border border-border/50 rounded-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/30">
-          <span className="text-xs text-muted-foreground font-mono">snippet</span>
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-accent transition-colors"
-          >
-            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            {copied ? "Copied" : "Copy"}
-          </button>
-        </div>
-        <pre className="p-4 overflow-x-auto text-sm font-mono leading-relaxed text-chart-2">
-          <code>{code}</code>
-        </pre>
+    <div className="mt-7 overflow-hidden rounded-2xl border border-border/70 bg-black/30">
+      <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
+        <span className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Example</span>
+        <button onClick={copy} className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground transition hover:text-accent">
+          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {copied ? "Copied" : "Copy"}
+        </button>
       </div>
+      <pre className="overflow-x-auto p-5 text-sm leading-7 text-sky-200"><code>{code}</code></pre>
     </div>
   );
 }
 
 export default function SDKDocs() {
-  const [active, setActive] = useState("getting-started");
-  const doc = docs[active];
+  const [active, setActive] = useState("overview");
+  const section = sections.find((item) => item.id === active) || sections[0];
 
   return (
-    <div className="min-h-screen bg-background font-body">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <div className="pt-20 max-w-7xl mx-auto px-6 flex gap-8">
-        {/* Sidebar */}
-        <aside className="hidden lg:block w-64 shrink-0 sticky top-20 h-fit">
-          <div className="bg-card/60 backdrop-blur-xl border border-border/50 rounded-3xl p-4">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-3">Documentation</h3>
-            <nav className="space-y-0.5">
-              {sections.map((s) => (
+      <main className="mx-auto max-w-7xl px-6 pb-24 pt-28">
+        <div className="mb-10 border-b border-border/60 pb-8">
+          <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-accent">
+            <BookOpen className="h-4 w-4" /> Documentation
+          </div>
+          <h1 className="font-heading text-4xl font-black tracking-tight md:text-5xl">OmniRune Docs</h1>
+          <p className="mt-3 max-w-2xl text-muted-foreground">A focused reference for the parts of OmniRune that scripts and integrations actually use.</p>
+        </div>
+
+        <div className="grid gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
+          <aside>
+            <nav className="rounded-2xl border border-border/70 bg-card/60 p-2 backdrop-blur-xl">
+              {sections.map((item) => (
                 <button
-                  key={s.id}
-                  onClick={() => setActive(s.id)}
-                  className={`w-full flex items-center gap-2 text-left px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${active === s.id ? "bg-accent/10 text-accent" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"}`}
+                  key={item.id}
+                  onClick={() => setActive(item.id)}
+                  className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-semibold transition ${active === item.id ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"}`}
                 >
-                  <ChevronRight className={`w-3.5 h-3.5 transition-transform ${active === s.id ? "rotate-90 text-accent" : ""}`} />
-                  {s.label}
+                  {item.label}
+                  <ChevronRight className="h-4 w-4" />
                 </button>
               ))}
             </nav>
-          </div>
-        </aside>
+          </aside>
 
-        {/* Mobile nav */}
-        <div className="lg:hidden fixed bottom-4 left-4 right-4 z-40">
-          <select
-            value={active}
-            onChange={(e) => setActive(e.target.value)}
-            className="w-full bg-card border border-border rounded-2xl px-4 py-3 text-sm text-foreground font-medium"
-          >
-            {sections.map((s) => (
-              <option key={s.id} value={s.id}>{s.label}</option>
-            ))}
-          </select>
-        </div>
+          <section className="rounded-3xl border border-border/70 bg-card/60 p-6 backdrop-blur-xl md:p-10">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent">{section.label}</p>
+            <h2 className="mt-2 font-heading text-3xl font-black md:text-4xl">{section.title}</h2>
+            <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">{section.description}</p>
 
-        {/* Content */}
-        <main className="flex-1 min-w-0 pb-24">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="bg-card/60 backdrop-blur-xl border border-border/50 rounded-3xl p-8 md:p-10">
-              <h1 className="font-heading text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">{doc.title}</h1>
-              <p className="mt-4 text-muted-foreground leading-relaxed text-base">{doc.content}</p>
-              <CodeBlock code={doc.code} />
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {section.points.map((point) => (
+                <div key={point} className="rounded-xl border border-border/60 bg-background/35 px-4 py-3 text-sm font-medium text-foreground/90">
+                  {point}
+                </div>
+              ))}
             </div>
-          </motion.div>
-        </main>
-      </div>
+
+            <CodeBlock code={section.code} />
+          </section>
+        </div>
+      </main>
     </div>
   );
 }
