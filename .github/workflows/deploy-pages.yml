@@ -42,10 +42,7 @@ jobs:
           git checkout d3c569b1cde38aac6182dd141fc4c84beaf06798
 
       - name: Patch viewer for OmniRune
-        run: |
-          python3 scripts/patch-map-viewer.py
-          python3 scripts/fix-hans-id.py
-          python3 scripts/fix-demo-serverpath.py
+        run: python3 scripts/patch-map-viewer.py
 
       - name: Install rs-map-viewer dependencies
         working-directory: .rs-map-viewer
