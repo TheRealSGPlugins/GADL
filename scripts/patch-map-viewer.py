@@ -18,7 +18,6 @@ text = app.read_text().replace(
 )
 app.write_text(text)
 
-# Start directly over the OmniRune test area instead of the upstream default.
 viewer_file = ROOT / "src/mapviewer/MapViewer.ts"
 text = viewer_file.read_text().replace(
     'camera: Camera = new Camera(3242, -26, 3202, -245, 1862);',
@@ -26,6 +25,8 @@ text = viewer_file.read_text().replace(
 )
 viewer_file.write_text(text)
 
+# Keep the external spawn injection as a fallback for cache revisions that do not
+# provide embedded NPC spawns for this square.
 spawn_file = ROOT / "src/mapviewer/data/npc/NpcSpawn.ts"
 text = spawn_file.read_text()
 old = '''export async function fetchNpcSpawns(url: string): Promise<NpcSpawn[]> {
@@ -36,7 +37,6 @@ new = '''export async function fetchNpcSpawns(url: string): Promise<NpcSpawn[]> 
     const response = await fetch(url);
     const spawns: NpcSpawn[] = await response.json();
 
-    // Three adjacent human models on a clear tile east of Lumbridge Castle.
     if (url === npcSpawnsOsrsUrl) {
         spawns.push({ id: 310, name: "OmniRune Demo A", x: 3230, y: 3218, level: 0 });
         spawns.push({ id: 310, name: "OmniRune Demo B", x: 3231, y: 3218, level: 0 });
@@ -48,6 +48,35 @@ new = '''export async function fetchNpcSpawns(url: string): Promise<NpcSpawn[]> 
 if old not in text:
     raise SystemExit("NpcSpawn patch point not found")
 spawn_file.write_text(text.replace(old, new))
+
+# Current OSRS cache squares can contain their own NPC spawn list. Inject the
+# demo after the renderer has selected cache-vs-external spawns so it cannot be
+# skipped by the cache-spawn branch.
+loader = ROOT / "src/mapviewer/webgl/loader/SdMapDataLoader.ts"
+text = loader.read_text()
+needle = '''        const npcSpawnGroups = createNpcSpawnGroups(
+            npcModelLoader,
+            basTypeLoader,
+            sceneBuf,
+            npcSpawns,
+        );'''
+replacement = '''        // OmniRune player-model proof: inject into the final spawn list.
+        // 3230-3232,3218 are in map square 50,50.
+        if (mapX === 50 && mapY === 50 && maxLevel >= 0) {
+            npcSpawns.push({ id: 3105, name: "OmniRune Demo A", x: 3230, y: 3218, level: 0 });
+            npcSpawns.push({ id: 3105, name: "OmniRune Demo B", x: 3231, y: 3218, level: 0 });
+            npcSpawns.push({ id: 3105, name: "OmniRune Demo C", x: 3232, y: 3218, level: 0 });
+        }
+
+        const npcSpawnGroups = createNpcSpawnGroups(
+            npcModelLoader,
+            basTypeLoader,
+            sceneBuf,
+            npcSpawns,
+        );'''
+if needle not in text:
+    raise SystemExit("SdMapDataLoader final NPC spawn patch point not found")
+loader.write_text(text.replace(needle, replacement))
 
 npc_file = ROOT / "src/mapviewer/webgl/npc/Npc.ts"
 text = npc_file.read_text()
@@ -75,27 +104,32 @@ new_method = '''    updateServerMovement(
     ) {
         const size = this.getSize();
 
-        // Deterministic walking loop for the three injected OmniRune models.
-        // World 3230-3232,3218 maps to local X 30-32, Y 18 in square 50,50.
+        // Deterministic OmniRune demo movement. Queue ONE adjacent tile at a
+        // time so updateMovement interpolates across it using the normal walk
+        // animation instead of snapping several tiles to a distant waypoint.
         if (
-            this.npcType.id === 310 &&
+            this.npcType.id === 3105 &&
             this.spawnY === 18 &&
             this.spawnX >= 30 &&
             this.spawnX <= 32
         ) {
             this.omniDemoTick++;
-            if (this.pathLength === 0 && this.omniDemoTick >= 18) {
+            if (this.pathLength === 0 && this.omniDemoTick >= 6) {
                 this.omniDemoTick = 0;
-                const offset = this.spawnX - 30;
-                const route = [
-                    [34 + offset, 18],
-                    [34 + offset, 22],
-                    [30 + offset, 22],
-                    [30 + offset, 18],
-                ];
-                const target = route[this.omniDemoStep % route.length];
+
+                // 16-tile clockwise rectangle: 4 east, 4 north, 4 west, 4 south.
+                const phase = this.omniDemoStep % 16;
+                let dir = 4; // east
+                if (phase >= 4 && phase < 8) {
+                    dir = 1; // north
+                } else if (phase >= 8 && phase < 12) {
+                    dir = 3; // west
+                } else if (phase >= 12) {
+                    dir = 6; // south
+                }
+
                 this.omniDemoStep++;
-                this.queuePath(target[0], target[1], MovementType.WALK);
+                this.queuePathDir(dir, MovementType.WALK);
             }
             return;
         }'''
@@ -103,7 +137,6 @@ if old_method not in text:
     raise SystemExit("Npc movement patch point not found")
 npc_file.write_text(text.replace(old_method, new_method))
 
-# Add direct RuneScape X/Y coordinate navigation to the existing Leva controls.
 controls = ROOT / "src/mapviewer/MapViewerControls.tsx"
 text = controls.read_text()
 state_needle = '''        const [varType, setVarType] = useState<VarType>(VarType.VARBIT);
@@ -207,4 +240,4 @@ text = downloader.read_text().replace(
 )
 downloader.write_text(text)
 
-print("Patched rs-map-viewer with coordinate jump and OmniRune movement demo")
+print("Patched rs-map-viewer with smooth tile-by-tile OmniRune movement demo")
