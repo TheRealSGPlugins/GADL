@@ -1,10 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Download, Menu, X } from "lucide-react";
+import { Download, LogIn, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   const links = [
     { to: "/", label: "Home" },
@@ -71,6 +73,8 @@ export default function Navbar() {
     );
   };
 
+  const displayName = user?.global_name || user?.username || "Account";
+
   return (
     <nav className="fixed inset-x-0 top-0 z-50 border-b border-blue-500/15 bg-[#01040a]/96 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-[1480px] items-center justify-between px-5 sm:px-7 lg:px-10">
@@ -88,14 +92,29 @@ export default function Navbar() {
           {links.map((link) => navItem(link))}
         </div>
 
-        <div className="hidden md:block">
-          <Link
-            to="/download"
-            className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-2.5 text-sm font-extrabold uppercase tracking-[0.07em] text-white shadow-[0_0_22px_rgba(37,99,235,0.28)] transition hover:bg-blue-500"
-          >
-            <Download className="h-4 w-4" />
-            Download
-          </Link>
+        <div className="hidden items-center gap-3 md:flex">
+          {isAuthenticated ? (
+            <>
+              <span className="max-w-36 truncate text-sm font-semibold text-slate-300">
+                {displayName}
+              </span>
+              <button
+                onClick={logout}
+                className="inline-flex items-center gap-2 rounded-md border border-blue-500/25 bg-blue-500/[0.06] px-4 py-2.5 text-sm font-extrabold uppercase tracking-[0.07em] text-white transition hover:bg-blue-500/15"
+              >
+                <LogOut className="h-4 w-4" />
+                Log out
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-5 py-2.5 text-sm font-extrabold uppercase tracking-[0.07em] text-white shadow-[0_0_22px_rgba(37,99,235,0.28)] transition hover:bg-blue-500"
+            >
+              <LogIn className="h-4 w-4" />
+              Sign in
+            </Link>
+          )}
         </div>
 
         <button
@@ -110,14 +129,27 @@ export default function Navbar() {
       {menuOpen && (
         <div className="border-t border-blue-500/10 bg-[#01040a] px-5 pb-5 pt-3 md:hidden">
           <div className="space-y-1">{links.map((link) => navItem(link, true))}</div>
-          <Link
-            to="/download"
-            onClick={() => setMenuOpen(false)}
-            className="mt-3 flex items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-3 text-sm font-extrabold uppercase tracking-[0.08em] text-white"
-          >
-            <Download className="h-4 w-4" />
-            Download
-          </Link>
+          {isAuthenticated ? (
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                logout();
+              }}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-md border border-blue-500/25 bg-blue-500/[0.06] px-4 py-3 text-sm font-extrabold uppercase tracking-[0.08em] text-white"
+            >
+              <LogOut className="h-4 w-4" />
+              Log out {displayName}
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setMenuOpen(false)}
+              className="mt-3 flex items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-3 text-sm font-extrabold uppercase tracking-[0.08em] text-white"
+            >
+              <LogIn className="h-4 w-4" />
+              Sign in
+            </Link>
+          )}
         </div>
       )}
     </nav>
