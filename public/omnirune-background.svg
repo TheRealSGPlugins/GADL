@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="centerGlow" cx="50%" cy="42%" r="58%">
+      <stop offset="0%" stop-color="#0b2a67" stop-opacity=".48"/>
+      <stop offset="28%" stop-color="#061a42" stop-opacity=".30"/>
+      <stop offset="62%" stop-color="#020a18" stop-opacity=".18"/>
+      <stop offset="100%" stop-color="#00040b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00040a"/>
+      <stop offset="45%" stop-color="#02091a"/>
+      <stop offset="100%" stop-color="#00030a"/>
+    </linearGradient>
+    <filter id="smokeLeft" x="-30%" y="-30%" width="180%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency=".012 .034" numOctaves="4" seed="13" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="85" xChannelSelector="R" yChannelSelector="B" result="warp"/>
+      <feGaussianBlur in="warp" stdDeviation="18"/>
+    </filter>
+    <filter id="smokeRight" x="-30%" y="-30%" width="180%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency=".014 .032" numOctaves="4" seed="27" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="88" xChannelSelector="G" yChannelSelector="B" result="warp"/>
+      <feGaussianBlur in="warp" stdDeviation="17"/>
+    </filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="28"/></filter>
+    <radialGradient id="blueCloud">
+      <stop offset="0%" stop-color="#0a6cff" stop-opacity=".95"/>
+      <stop offset="42%" stop-color="#004dff" stop-opacity=".48"/>
+      <stop offset="78%" stop-color="#002d9f" stop-opacity=".18"/>
+      <stop offset="100%" stop-color="#00112f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cyanCloud">
+      <stop offset="0%" stop-color="#23baff" stop-opacity=".72"/>
+      <stop offset="45%" stop-color="#006dff" stop-opacity=".34"/>
+      <stop offset="100%" stop-color="#00205d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#base)"/>
+  <rect width="1920" height="1080" fill="url(#centerGlow)"/>
+
+  <g opacity=".9">
+    <ellipse cx="50" cy="770" rx="340" ry="300" fill="url(#blueCloud)" filter="url(#smokeLeft)"/>
+    <ellipse cx="170" cy="850" rx="320" ry="240" fill="url(#cyanCloud)" filter="url(#smokeLeft)"/>
+    <ellipse cx="-30" cy="930" rx="300" ry="220" fill="url(#blueCloud)" filter="url(#smokeLeft)"/>
+  </g>
+
+  <g opacity=".9">
+    <ellipse cx="1870" cy="770" rx="340" ry="300" fill="url(#blueCloud)" filter="url(#smokeRight)"/>
+    <ellipse cx="1750" cy="850" rx="320" ry="240" fill="url(#cyanCloud)" filter="url(#smokeRight)"/>
+    <ellipse cx="1950" cy="930" rx="300" ry="220" fill="url(#blueCloud)" filter="url(#smokeRight)"/>
+  </g>
+
+  <ellipse cx="960" cy="490" rx="560" ry="320" fill="#036cff" opacity=".07" filter="url(#soft)"/>
+  <ellipse cx="960" cy="620" rx="760" ry="360" fill="#0077ff" opacity=".045" filter="url(#soft)"/>
+
+  <g fill="#2b8dff" opacity=".6">
+    <circle cx="164" cy="196" r="1.3"/><circle cx="308" cy="279" r="1"/><circle cx="484" cy="177" r="1.1"/>
+    <circle cx="655" cy="250" r=".9"/><circle cx="806" cy="145" r="1.2"/><circle cx="1002" cy="204" r=".8"/>
+    <circle cx="1184" cy="154" r="1.1"/><circle cx="1368" cy="269" r="1"/><circle cx="1550" cy="188" r="1.2"/>
+    <circle cx="1736" cy="298" r=".9"/><circle cx="220" cy="442" r=".8"/><circle cx="1690" cy="480" r="1"/>
+    <circle cx="394" cy="535" r=".9"/><circle cx="1518" cy="553" r=".9"/>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#centerGlow)" opacity=".55"/>
+</svg>
