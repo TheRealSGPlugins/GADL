@@ -41,62 +41,71 @@ export default function Home() {
     <div className="min-h-screen bg-background font-body text-foreground overflow-hidden">
       <Navbar />
 
-      <section className="relative min-h-screen overflow-hidden border-b border-blue-500/10 bg-[#01040a] px-6 pb-16 pt-20">
-        <div className="absolute inset-0 omni-grid pointer-events-none" />
-        <div className="omni-hero-glow absolute inset-0" />
+      <section className="relative min-h-[940px] overflow-hidden border-b border-blue-400/10 bg-black px-6 pb-20 pt-24 md:min-h-screen">
+        <div className="absolute inset-0 bg-black" />
+        <div className="omni-reference-bg absolute inset-0" />
+        <div className="omni-reference-beams absolute inset-0" />
+        <div className="omni-reference-stars absolute inset-0" />
+        <div className="omni-reference-vignette absolute inset-0" />
 
-        <div className="pointer-events-none absolute left-1/2 top-[43%] z-0 w-[min(1180px,112vw)] -translate-x-1/2 -translate-y-1/2">
-          <OmniRuneLogo className="omni-hero-art absolute left-1/2 top-1/2 w-full select-none" />
-        </div>
+        <div className="relative z-10 mx-auto flex min-h-[820px] w-full max-w-7xl items-center justify-center md:min-h-[calc(100vh-6rem)]">
+          <div className="flex w-full flex-col items-center text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="relative flex w-full justify-center"
+            >
+              <div className="absolute left-1/2 top-1/2 h-[340px] w-[760px] max-w-[92vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/10 blur-[110px]" />
+              <OmniRuneLogo className="omni-reference-logo relative z-10 w-[min(92vw,900px)] select-none" />
+            </motion.div>
 
-        <div className="absolute inset-x-0 bottom-0 z-[1] h-[48%] bg-gradient-to-t from-[#01040a] via-[#01040a]/82 to-transparent" />
-        <div className="absolute inset-x-0 top-16 z-[1] h-44 bg-gradient-to-b from-[#01040a]/92 to-transparent" />
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.15 }}
+              className="mx-auto -mt-3 max-w-4xl"
+            >
+              <div className="flex items-center justify-center gap-3 text-[11px] font-bold uppercase tracking-[0.32em] text-cyan-300 sm:text-xs">
+                <span className="h-px w-8 bg-gradient-to-r from-transparent to-cyan-400 sm:w-16" />
+                Native OSRS Automation
+                <span className="h-px w-8 bg-gradient-to-l from-transparent to-cyan-400 sm:w-16" />
+              </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-6xl flex-col items-center justify-end pb-[7vh] text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="mx-auto max-w-4xl"
-          >
-            <div className="flex items-center justify-center gap-3 text-[11px] font-bold uppercase tracking-[0.3em] text-blue-300 sm:text-xs">
-              <span className="h-px w-8 bg-gradient-to-r from-transparent to-blue-400 sm:w-14" />
-              Native OSRS Automation
-              <span className="h-px w-8 bg-gradient-to-l from-transparent to-blue-400 sm:w-14" />
-            </div>
+              <h1 className="mt-5 font-heading text-3xl font-black tracking-tight text-white drop-shadow-[0_0_22px_rgba(0,200,255,0.30)] sm:text-4xl md:text-5xl lg:text-6xl">
+                THE ULTIMATE HEADLESS OSRS NATIVE CLIENT
+              </h1>
 
-            <h1 className="mt-5 font-heading text-3xl font-black tracking-tight text-white drop-shadow-[0_0_18px_rgba(0,145,255,0.18)] sm:text-4xl md:text-5xl">
-              THE ULTIMATE HEADLESS OSRS NATIVE CLIENT
-            </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-300/85 md:text-lg">
-              OmniRune combines the native headless runtime, Omni V2 scripting API,
-              live navigation, documentation, and development tools in one project.
-            </p>
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg">
+                OmniRune combines the native headless runtime, Omni V2 scripting API,
+                live navigation, documentation, and development tools in one project.
+              </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                to="/download"
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-[0_0_28px_rgba(37,99,235,0.28)] transition hover:-translate-y-0.5 hover:bg-blue-500"
-              >
-                <Download className="h-4 w-4" />
-                Download
-              </Link>
-              <Link
-                to="/docs"
-                className="inline-flex items-center gap-2 rounded-lg border border-blue-400/35 bg-[#020814]/75 px-6 py-3 text-sm font-bold text-white backdrop-blur-md transition hover:-translate-y-0.5 hover:border-blue-400/70 hover:bg-blue-500/10"
-              >
-                <BookOpen className="h-4 w-4 text-blue-300" />
-                Documentation
-              </Link>
-              <Link
-                to="/map"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-[#020814]/70 px-6 py-3 text-sm font-bold text-slate-200 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-blue-400/40 hover:text-white"
-              >
-                <MapPinned className="h-4 w-4 text-blue-300" />
-                World Map
-              </Link>
-            </div>
-          </motion.div>
+              <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+                <Link
+                  to="/download"
+                  className="inline-flex items-center gap-2 rounded-lg bg-cyan-400 px-6 py-3 text-sm font-extrabold text-[#001018] shadow-[0_0_28px_rgba(0,220,255,0.38)] transition hover:-translate-y-0.5 hover:bg-cyan-300"
+                >
+                  <Download className="h-4 w-4" />
+                  Download
+                </Link>
+                <Link
+                  to="/docs"
+                  className="inline-flex items-center gap-2 rounded-lg border border-cyan-300/35 bg-black/45 px-6 py-3 text-sm font-bold text-white backdrop-blur-md transition hover:-translate-y-0.5 hover:border-cyan-300/70 hover:bg-cyan-400/10"
+                >
+                  <BookOpen className="h-4 w-4 text-cyan-300" />
+                  Documentation
+                </Link>
+                <Link
+                  to="/map"
+                  className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-black/40 px-6 py-3 text-sm font-bold text-slate-200 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-cyan-300/45 hover:text-white"
+                >
+                  <MapPinned className="h-4 w-4 text-cyan-300" />
+                  World Map
+                </Link>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
