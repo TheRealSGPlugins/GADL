@@ -19,6 +19,7 @@ export default function Navbar() {
   const links = [
     { to: "/", label: "Home" },
     { to: "/docs", label: "Docs" },
+    { to: "/map", label: "Map" },
     { to: "/updates", label: "Updates" },
     { to: "/achievements", label: "Achievements" },
     { to: "/download", label: "Download" },
