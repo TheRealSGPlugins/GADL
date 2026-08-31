@@ -12,6 +12,7 @@ import Updates from './pages/Updates';
 import Achievements from './pages/Achievements';
 import Download from './pages/Download';
 import Callback from './pages/Callback';
+import MapPage from './pages/Map';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth } = useAuth();
@@ -32,6 +33,7 @@ const AuthenticatedApp = () => {
       <Route path="/achievements" element={<Achievements />} />
       <Route path="/download" element={<Download />} />
       <Route path="/forum" element={<Forum />} />
+      <Route path="/map" element={<MapPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/callback" element={<Callback />} />
       <Route path="*" element={<PageNotFound />} />
