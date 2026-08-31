@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
 import { Download, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
-import BrandMark from "@/components/BrandMark";
 
 export default function Navbar() {
   const location = useLocation();
@@ -21,11 +20,10 @@ export default function Navbar() {
     path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
 
   return (
-    <nav className="fixed inset-x-0 top-0 z-50 border-b border-blue-400/10 bg-[#030711]/90 backdrop-blur-xl">
+    <nav className="fixed inset-x-0 top-0 z-50 border-b border-blue-400/10 bg-[#030711]/92 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:px-6">
-        <Link to="/" className="group flex items-center gap-2.5">
-          <BrandMark className="h-9 w-9" />
-          <span className="font-heading text-lg font-black tracking-[0.04em] text-white">
+        <Link to="/" className="group flex items-center">
+          <span className="font-heading text-xl font-black italic tracking-[-0.03em] text-white transition group-hover:text-blue-100">
             OMNI<span className="text-blue-400">RUNE</span>
           </span>
         </Link>
