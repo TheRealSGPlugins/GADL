@@ -41,37 +41,34 @@ export default function Home() {
     <div className="min-h-screen bg-background font-body text-foreground overflow-hidden">
       <Navbar />
 
-      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20 pb-16 border-b border-blue-500/10">
+      <section className="relative min-h-screen overflow-hidden border-b border-blue-500/10 bg-[#01040a] px-6 pb-16 pt-20">
         <div className="absolute inset-0 omni-grid pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_50%_18%,rgba(0,145,255,0.20),transparent_58%)] pointer-events-none" />
-        <div className="absolute left-1/2 top-[42%] h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/15 blur-[110px] pointer-events-none" />
+        <div className="omni-hero-glow absolute inset-0" />
 
-        <div className="relative z-10 mx-auto w-full max-w-6xl text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: "easeOut" }}
-            className="mx-auto flex justify-center"
-          >
-            <OmniRuneLogo className="w-[min(92vw,760px)] select-none drop-shadow-[0_0_36px_rgba(0,145,255,0.35)]" />
-          </motion.div>
+        <div className="pointer-events-none absolute left-1/2 top-[43%] z-0 w-[min(1180px,112vw)] -translate-x-1/2 -translate-y-1/2">
+          <OmniRuneLogo className="omni-hero-art absolute left-1/2 top-1/2 w-full select-none" />
+        </div>
 
+        <div className="absolute inset-x-0 bottom-0 z-[1] h-[48%] bg-gradient-to-t from-[#01040a] via-[#01040a]/82 to-transparent" />
+        <div className="absolute inset-x-0 top-16 z-[1] h-44 bg-gradient-to-b from-[#01040a]/92 to-transparent" />
+
+        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-6xl flex-col items-center justify-end pb-[7vh] text-center">
           <motion.div
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="mx-auto -mt-2 max-w-3xl"
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="mx-auto max-w-4xl"
           >
-            <div className="flex items-center justify-center gap-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.28em] text-blue-300">
-              <span className="h-px w-8 sm:w-14 bg-gradient-to-r from-transparent to-blue-400" />
+            <div className="flex items-center justify-center gap-3 text-[11px] font-bold uppercase tracking-[0.3em] text-blue-300 sm:text-xs">
+              <span className="h-px w-8 bg-gradient-to-r from-transparent to-blue-400 sm:w-14" />
               Native OSRS Automation
-              <span className="h-px w-8 sm:w-14 bg-gradient-to-l from-transparent to-blue-400" />
+              <span className="h-px w-8 bg-gradient-to-l from-transparent to-blue-400 sm:w-14" />
             </div>
 
-            <h1 className="mt-5 font-heading text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white">
+            <h1 className="mt-5 font-heading text-3xl font-black tracking-tight text-white drop-shadow-[0_0_18px_rgba(0,145,255,0.18)] sm:text-4xl md:text-5xl">
               THE ULTIMATE HEADLESS OSRS NATIVE CLIENT
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg leading-relaxed text-slate-400">
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-300/85 md:text-lg">
               OmniRune combines the native headless runtime, Omni V2 scripting API,
               live navigation, documentation, and development tools in one project.
             </p>
@@ -79,21 +76,21 @@ export default function Home() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 to="/download"
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-[0_0_28px_rgba(37,99,235,0.28)] transition hover:bg-blue-500 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-[0_0_28px_rgba(37,99,235,0.28)] transition hover:-translate-y-0.5 hover:bg-blue-500"
               >
                 <Download className="h-4 w-4" />
                 Download
               </Link>
               <Link
                 to="/docs"
-                className="inline-flex items-center gap-2 rounded-lg border border-blue-400/35 bg-blue-500/[0.06] px-6 py-3 text-sm font-bold text-white transition hover:border-blue-400/70 hover:bg-blue-500/10 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-lg border border-blue-400/35 bg-[#020814]/75 px-6 py-3 text-sm font-bold text-white backdrop-blur-md transition hover:-translate-y-0.5 hover:border-blue-400/70 hover:bg-blue-500/10"
               >
                 <BookOpen className="h-4 w-4 text-blue-300" />
                 Documentation
               </Link>
               <Link
                 to="/map"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-bold text-slate-200 transition hover:border-blue-400/40 hover:text-white hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-[#020814]/70 px-6 py-3 text-sm font-bold text-slate-200 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-blue-400/40 hover:text-white"
               >
                 <MapPinned className="h-4 w-4 text-blue-300" />
                 World Map
@@ -110,10 +107,10 @@ export default function Home() {
               <Bot className="h-3.5 w-3.5" />
               OmniRune Platform
             </div>
-            <h2 className="mt-5 font-heading text-3xl md:text-5xl font-black tracking-tight text-white">
+            <h2 className="mt-5 font-heading text-3xl font-black tracking-tight text-white md:text-5xl">
               Everything connects to the same runtime
             </h2>
-            <p className="mt-4 text-base md:text-lg text-slate-400">
+            <p className="mt-4 text-base text-slate-400 md:text-lg">
               Build scripts, inspect the world, navigate, test actions, and follow the project from one blue-and-white control surface.
             </p>
           </div>
