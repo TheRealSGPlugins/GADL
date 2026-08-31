@@ -28,10 +28,12 @@ new = '''export async function fetchNpcSpawns(url: string): Promise<NpcSpawn[]> 
     const response = await fetch(url);
     const spawns: NpcSpawn[] = await response.json();
 
-    // OmniRune player-model proof of concept. Hans supplies a human OSRS
-    // model and normal player-like idle/walk animation for the first test.
+    // Three adjacent human models make the OmniRune movement proof obvious
+    // even though Hans already exists naturally at Lumbridge Castle.
     if (url === npcSpawnsOsrsUrl) {
-        spawns.push({ id: 310, name: "OmniRune Player", x: 3222, y: 3218, level: 0 });
+        spawns.push({ id: 310, name: "OmniRune Demo A", x: 3222, y: 3218, level: 0 });
+        spawns.push({ id: 310, name: "OmniRune Demo B", x: 3223, y: 3218, level: 0 });
+        spawns.push({ id: 310, name: "OmniRune Demo C", x: 3224, y: 3218, level: 0 });
     }
 
     return spawns;
@@ -66,17 +68,23 @@ new_method = '''    updateServerMovement(
     ) {
         const size = this.getSize();
 
-        // Deterministic walking loop for the injected OmniRune human model.
-        // World 3222,3218 is local 22,18 inside map-square 50,50.
-        if (this.npcType.id === 310 && this.spawnX === 22 && this.spawnY === 18) {
+        // Deterministic walking loop for the three injected OmniRune models.
+        // Their starting X offsets are preserved so they walk as a visible row.
+        if (
+            this.npcType.id === 310 &&
+            this.spawnY === 18 &&
+            this.spawnX >= 22 &&
+            this.spawnX <= 24
+        ) {
             this.omniDemoTick++;
             if (this.pathLength === 0 && this.omniDemoTick >= 18) {
                 this.omniDemoTick = 0;
+                const offset = this.spawnX - 22;
                 const route = [
-                    [26, 18],
-                    [26, 22],
-                    [22, 22],
-                    [22, 18],
+                    [26 + offset, 18],
+                    [26 + offset, 22],
+                    [22 + offset, 22],
+                    [22 + offset, 18],
                 ];
                 const target = route[this.omniDemoStep % route.length];
                 this.omniDemoStep++;
@@ -88,6 +96,35 @@ if old_method not in text:
     raise SystemExit("Npc movement patch point not found")
 npc_file.write_text(text.replace(old_method, new_method))
 
+container = ROOT / "src/mapviewer/MapViewerContainer.tsx"
+text = container.read_text()
+needle = '''        <div className="max-height">
+            {loadingBarOverlay}'''
+replacement = '''        <div className="max-height">
+            <div style={{
+                position: "fixed",
+                top: "12px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 10000,
+                padding: "8px 14px",
+                border: "1px solid #38bdf8",
+                borderRadius: "6px",
+                background: "rgba(0, 8, 20, 0.88)",
+                color: "#e0f2fe",
+                fontFamily: "sans-serif",
+                fontSize: "13px",
+                fontWeight: 800,
+                letterSpacing: "0.08em",
+                pointerEvents: "none",
+            }}>
+                OMNIRUNE PLAYER DEMO — 3 TEST MODELS @ 3222–3224, 3218
+            </div>
+            {loadingBarOverlay}'''
+if needle not in text:
+    raise SystemExit("MapViewerContainer banner patch point not found")
+container.write_text(text.replace(needle, replacement))
+
 downloader = ROOT / "scripts/download-caches.js"
 text = downloader.read_text().replace(
     '        await askQuestion("Downloading ~" + formatBytes(totalBytes) + ". Press enter to continue.");',
@@ -95,4 +132,4 @@ text = downloader.read_text().replace(
 )
 downloader.write_text(text)
 
-print("Patched rs-map-viewer for OmniRune player-model demo")
+print("Patched rs-map-viewer for unmistakable OmniRune player-model demo")
