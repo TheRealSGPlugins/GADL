@@ -1,96 +1,38 @@
 import Navbar from "../components/Navbar";
-import { motion } from "framer-motion";
-import { Trophy, Star, Rocket, Target, Flame } from "lucide-react";
+import { Trophy, Rocket, Star, Target, Flame } from "lucide-react";
 
-// Project milestones. Swap these for live data once the achievements
-// source is wired up.
 const milestones = [
-  {
-    icon: Rocket,
-    title: "Project Launch",
-    desc: "OmniRune development kicked off.",
-    status: "done",
-  },
-  {
-    icon: Star,
-    title: "SDK v1 Released",
-    desc: "First documented SDK with the core engine and scripting API.",
-    status: "done",
-  },
-  {
-    icon: Target,
-    title: "Living Documentation",
-    desc: "Docs that stay in sync with the repo on every update.",
-    status: "done",
-  },
-  {
-    icon: Flame,
-    title: "Continuous Updates",
-    desc: "Ongoing releases and fixes shipping into the client.",
-    status: "in-progress",
-  },
+  { icon: Rocket, title: "Project Launch", desc: "OmniRune development kicked off.", status: "Achieved" },
+  { icon: Star, title: "SDK v1", desc: "Core SDK structure and documentation established.", status: "Achieved" },
+  { icon: Target, title: "3D World Viewer", desc: "Native 3D world rendering with collision-aware movement proofed.", status: "Achieved" },
+  { icon: Flame, title: "Continuous Updates", desc: "Ongoing client, map, and SDK improvements.", status: "In progress" },
 ];
-
-const statusStyles = {
-  done: "bg-accent/15 text-accent border-accent/30",
-  "in-progress": "bg-primary/15 text-primary border-primary/30",
-  upcoming: "bg-muted text-muted-foreground border-border",
-};
-
-const statusLabel = {
-  done: "Achieved",
-  "in-progress": "In progress",
-  upcoming: "Upcoming",
-};
 
 export default function Achievements() {
   return (
-    <div className="min-h-screen bg-background font-body text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-
-      <header className="relative pt-28 pb-12 px-6 overflow-hidden">
-        <div className="absolute inset-0 omni-grid pointer-events-none" />
-        <div className="relative max-w-4xl mx-auto">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-4">
-            <Trophy className="w-4 h-4 text-accent" /> Milestones
+      <main className="mx-auto max-w-5xl px-6 pb-24 pt-32">
+        <div className="mb-10 border-b border-border/60 pb-8">
+          <div className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-accent">
+            <Trophy className="h-4 w-4" /> Milestones
           </div>
-          <h1 className="font-heading text-4xl md:text-5xl font-extrabold tracking-tight">
-            <span className="omni-gradient-text">Achievements</span>
-          </h1>
-          <p className="mt-3 text-muted-foreground text-lg max-w-xl">
-            Milestones and wins as the OmniRune project grows.
-          </p>
+          <h1 className="font-heading text-4xl font-black tracking-tight md:text-5xl">Achievements</h1>
+          <p className="mt-3 max-w-2xl text-muted-foreground">A simple record of major OmniRune milestones.</p>
         </div>
-      </header>
 
-      <main className="px-6 pb-24">
-        <div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-5">
-          {milestones.map((m, i) => (
-            <motion.div
-              key={m.title}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: i * 0.06 }}
-              className="omni-card p-6 flex gap-4 items-start"
-            >
-              <div className="w-11 h-11 shrink-0 rounded-2xl bg-accent/10 flex items-center justify-center">
-                <m.icon className="w-5 h-5 text-accent" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-heading font-bold">{m.title}</h3>
-                  <span
-                    className={`text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border ${statusStyles[m.status]}`}
-                  >
-                    {statusLabel[m.status]}
-                  </span>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {milestones.map((item) => (
+            <article key={item.title} className="rounded-2xl border border-border/70 bg-card/60 p-6 backdrop-blur-xl">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-accent/20 bg-accent/10">
+                  <item.icon className="h-5 w-5 text-accent" />
                 </div>
-                <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
-                  {m.desc}
-                </p>
+                <span className="rounded-full border border-border/70 bg-background/40 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">{item.status}</span>
               </div>
-            </motion.div>
+              <h2 className="mt-5 font-heading text-xl font-bold">{item.title}</h2>
+              <p className="mt-2 text-sm leading-7 text-muted-foreground">{item.desc}</p>
+            </article>
           ))}
         </div>
       </main>
