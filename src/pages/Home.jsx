@@ -69,7 +69,7 @@ export default function Home() {
             </div>
 
             <h1 className="mt-5 font-heading text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white">
-              Headless. Scriptable. Built around one live SDK.
+              THE ULTIMATE HEADLESS OSRS NATIVE CLIENT
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg leading-relaxed text-slate-400">
               OmniRune combines the native headless runtime, Omni V2 scripting API,
