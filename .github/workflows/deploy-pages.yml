@@ -45,6 +45,7 @@ jobs:
         run: |
           python3 scripts/patch-map-viewer.py
           python3 scripts/fix-hans-id.py
+          python3 scripts/fix-demo-serverpath.py
 
       - name: Install rs-map-viewer dependencies
         working-directory: .rs-map-viewer
