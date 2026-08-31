@@ -1,198 +1,161 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import BrandMark from "../components/BrandMark";
-import PulseDots from "../components/PulseDots";
+import OmniRuneLogo from "../components/OmniRuneLogo";
 import {
   ArrowRight,
-  Code2,
-  Users,
   BookOpen,
-  Trophy,
-  Sparkles,
+  Bot,
+  Code2,
+  Download,
+  MapPinned,
+  RadioTower,
+  TerminalSquare,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const features = [
   {
+    icon: RadioTower,
+    title: "Native Headless",
+    desc: "Persistent OSRS sessions with live decoded state and direct native actions.",
+  },
+  {
     icon: Code2,
-    title: "SDK & Tooling",
-    desc: "Documented SDK with copy-paste snippets for building OSRS automation fast.",
+    title: "Omni V2 SDK",
+    desc: "One live API for players, NPCs, objects, inventory, actions, events, and navigation.",
   },
   {
-    icon: BookOpen,
-    title: "Living Documentation",
-    desc: "Up-to-date docs on the client and the work shipping into it, kept in sync with the repo.",
+    icon: TerminalSquare,
+    title: "Lua Scripts",
+    desc: "Build package scripts with onStart, onTick, onStop, events, and live game state.",
   },
   {
-    icon: Trophy,
-    title: "Updates & Achievements",
-    desc: "Track every release, milestone, and win as the project evolves.",
-  },
-  {
-    icon: Users,
-    title: "Community Forum",
-    desc: "Ask questions, share techniques, and hold discussions with other builders.",
+    icon: MapPinned,
+    title: "Map & Navigation",
+    desc: "Visual coordinates and route tooling built around the OmniRune walker stack.",
   },
 ];
-
-// Decorative corner markers used in the reference design
-function Marker({ className = "" }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      className={`w-3.5 h-3.5 text-accent/40 ${className}`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-    >
-      <path d="M3 3 L13 13 M13 3 L3 13" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background font-body text-foreground overflow-hidden">
       <Navbar />
 
-      {/* ===== Hero ===== */}
-      <section className="relative pt-28 pb-40 px-6">
+      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20 pb-16 border-b border-blue-500/10">
         <div className="absolute inset-0 omni-grid pointer-events-none" />
-        <PulseDots count={44} />
+        <div className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_50%_18%,rgba(0,145,255,0.20),transparent_58%)] pointer-events-none" />
+        <div className="absolute left-1/2 top-[42%] h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/15 blur-[110px] pointer-events-none" />
 
-        <div className="relative max-w-3xl mx-auto text-center">
-          {/* logo */}
+        <div className="relative z-10 mx-auto w-full max-w-6xl text-center">
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex justify-center mb-16"
+            initial={{ opacity: 0, scale: 0.94, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: "easeOut" }}
+            className="mx-auto flex justify-center"
           >
-            <BrandMark className="w-14 h-14" />
-          </motion.div>
-
-          {/* eyebrow */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex items-center justify-center gap-3 mb-8 text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground"
-          >
-            <span className="h-px w-10 bg-gradient-to-r from-transparent to-accent/50" />
-            Game Automation SDK
-            <span className="h-px w-10 bg-gradient-to-l from-transparent to-accent/50" />
-          </motion.div>
-
-          {/* relative wrapper for markers */}
-          <div className="relative">
-            <Marker className="absolute -left-6 -top-2 hidden sm:block" />
-            <Marker className="absolute -right-6 -top-2 hidden sm:block" />
-
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="font-heading font-extrabold tracking-tight leading-[0.95] text-7xl sm:text-8xl md:text-[8.5rem] omni-gradient-text"
-            >
-              OmniRune
-            </motion.h1>
-
-            <Marker className="absolute -left-6 -bottom-4 hidden sm:block" />
-            <Marker className="absolute -right-6 -bottom-4 hidden sm:block" />
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mt-8 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed"
-          >
-            The documentation, updates, and community home for the OmniRune
-            automation project. Read the docs, follow every release, and join the
-            discussion.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-4"
-          >
-            <Link
-              to="/docs"
-              className="group inline-flex items-center gap-2.5 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-7 py-3.5 rounded-full transition-all duration-200 hover:scale-[1.03] shadow-lg shadow-primary/20"
-            >
-              Read the Docs
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              to="/forum"
-              className="inline-flex items-center gap-2.5 bg-card/60 hover:bg-secondary text-foreground font-semibold px-7 py-3.5 rounded-full border border-border backdrop-blur-sm transition-all duration-200 hover:scale-[1.03]"
-            >
-              Join the Forum
-            </Link>
+            <OmniRuneLogo className="w-[min(92vw,760px)] select-none drop-shadow-[0_0_36px_rgba(0,145,255,0.35)]" />
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
-            className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="mx-auto -mt-2 max-w-3xl"
           >
-            <Sparkles className="w-4 h-4 text-accent" />
-            Built and maintained with continuous updates from the source repo
+            <div className="flex items-center justify-center gap-3 text-[11px] sm:text-xs font-bold uppercase tracking-[0.28em] text-blue-300">
+              <span className="h-px w-8 sm:w-14 bg-gradient-to-r from-transparent to-blue-400" />
+              Native OSRS Automation
+              <span className="h-px w-8 sm:w-14 bg-gradient-to-l from-transparent to-blue-400" />
+            </div>
+
+            <h1 className="mt-5 font-heading text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-white">
+              Headless. Scriptable. Built around one live SDK.
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl text-base md:text-lg leading-relaxed text-slate-400">
+              OmniRune combines the native headless runtime, Omni V2 scripting API,
+              live navigation, documentation, and development tools in one project.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/download"
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-[0_0_28px_rgba(37,99,235,0.28)] transition hover:bg-blue-500 hover:-translate-y-0.5"
+              >
+                <Download className="h-4 w-4" />
+                Download
+              </Link>
+              <Link
+                to="/docs"
+                className="inline-flex items-center gap-2 rounded-lg border border-blue-400/35 bg-blue-500/[0.06] px-6 py-3 text-sm font-bold text-white transition hover:border-blue-400/70 hover:bg-blue-500/10 hover:-translate-y-0.5"
+              >
+                <BookOpen className="h-4 w-4 text-blue-300" />
+                Documentation
+              </Link>
+              <Link
+                to="/map"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-bold text-slate-200 transition hover:border-blue-400/40 hover:text-white hover:-translate-y-0.5"
+              >
+                <MapPinned className="h-4 w-4 text-blue-300" />
+                World Map
+              </Link>
+            </div>
           </motion.div>
         </div>
-
-        {/* glowing horizon */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[140%] h-48 omni-horizon pointer-events-none" />
       </section>
 
-      {/* ===== Features ===== */}
-      <section className="relative py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="font-heading text-3xl md:text-5xl font-extrabold tracking-tight">
-              Everything in one place
+      <section className="relative px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/[0.06] px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-blue-300">
+              <Bot className="h-3.5 w-3.5" />
+              OmniRune Platform
+            </div>
+            <h2 className="mt-5 font-heading text-3xl md:text-5xl font-black tracking-tight text-white">
+              Everything connects to the same runtime
             </h2>
-            <p className="mt-4 text-muted-foreground text-lg max-w-md mx-auto">
-              Docs, releases, milestones, and community — for the whole project.
+            <p className="mt-4 text-base md:text-lg text-slate-400">
+              Build scripts, inspect the world, navigate, test actions, and follow the project from one blue-and-white control surface.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {features.map((f, i) => (
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {features.map((feature, index) => (
               <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 20 }}
+                key={feature.title}
+                initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.08 * i }}
-                className="group omni-card p-6 hover:border-accent/40 transition-all duration-300 hover:-translate-y-1"
+                transition={{ duration: 0.35, delay: index * 0.06 }}
+                className="group relative overflow-hidden rounded-2xl border border-blue-400/15 bg-[#09111f]/80 p-6 shadow-[0_18px_60px_-35px_rgba(0,145,255,0.55)] transition hover:-translate-y-1 hover:border-blue-400/45"
               >
-                <div className="w-11 h-11 rounded-2xl bg-accent/10 flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
-                  <f.icon className="w-5 h-5 text-accent" />
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/70 to-transparent opacity-50" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-500/10">
+                  <feature.icon className="h-5 w-5 text-blue-300" />
                 </div>
-                <h3 className="font-heading font-bold mb-2">{f.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {f.desc}
-                </p>
+                <h3 className="mt-5 font-heading text-lg font-bold text-white">{feature.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
+
+          <div className="mt-14 flex justify-center">
+            <Link
+              to="/docs"
+              className="group inline-flex items-center gap-2 text-sm font-bold text-blue-300 transition hover:text-white"
+            >
+              Start building with OmniRune
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ===== Footer ===== */}
-      <footer className="border-t border-border/60 py-10 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2.5">
-            <BrandMark className="w-7 h-7" />
-            <span className="font-heading font-bold text-foreground">
-              Omni<span className="text-accent">Rune</span>
-            </span>
-          </div>
-          <span>© {new Date().getFullYear()} OmniRune. All rights reserved.</span>
+      <footer className="border-t border-blue-400/10 bg-[#050a12]/80 px-6 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-sm text-slate-500 sm:flex-row">
+          <span className="font-heading font-bold tracking-wide text-white">
+            OMNI<span className="text-blue-400">RUNE</span>
+          </span>
+          <span>© {new Date().getFullYear()} OmniRune.</span>
         </div>
       </footer>
     </div>
