@@ -6,78 +6,93 @@
 
 @layer base {
   :root {
-    --background: 272 70% 5%;
-    --foreground: 280 28% 92%;
-    --card: 273 46% 9%;
-    --card-foreground: 280 28% 92%;
-    --popover: 273 50% 8%;
-    --popover-foreground: 280 28% 92%;
-    --primary: 276 78% 72%;
-    --primary-foreground: 272 70% 6%;
-    --secondary: 273 36% 16%;
-    --secondary-foreground: 280 28% 92%;
-    --muted: 273 32% 15%;
-    --muted-foreground: 277 22% 64%;
-    --accent: 282 80% 70%;
-    --accent-foreground: 272 70% 6%;
-    --destructive: 348 78% 58%;
-    --destructive-foreground: 280 28% 96%;
-    --border: 274 38% 18%;
-    --input: 274 38% 17%;
-    --ring: 282 80% 70%;
-    --chart-1: 282 80% 70%;
-    --chart-2: 263 78% 66%;
-    --chart-3: 300 70% 72%;
-    --chart-4: 250 60% 60%;
-    --chart-5: 320 64% 64%;
+    --background: 220 30% 6%;
+    --foreground: 210 40% 98%;
+    --card: 218 28% 10%;
+    --card-foreground: 210 40% 98%;
+    --popover: 218 30% 9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 202 100% 62%;
+    --primary-foreground: 220 35% 7%;
+
+    --secondary: 216 24% 16%;
+    --secondary-foreground: 210 35% 96%;
+
+    --muted: 216 20% 15%;
+    --muted-foreground: 214 16% 70%;
+
+    --accent: 196 100% 68%;
+    --accent-foreground: 220 35% 7%;
+
+    --destructive: 0 76% 58%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 23% 20%;
+    --input: 215 23% 18%;
+    --ring: 202 100% 62%;
+
+    --chart-1: 202 100% 62%;
+    --chart-2: 196 100% 72%;
+    --chart-3: 213 95% 70%;
+    --chart-4: 215 16% 72%;
+    --chart-5: 210 40% 96%;
+
     --radius: 0.85rem;
-    --sidebar-background: 272 70% 5%;
-    --sidebar-foreground: 280 28% 92%;
-    --sidebar-primary: 282 80% 70%;
-    --sidebar-primary-foreground: 272 70% 6%;
-    --sidebar-accent: 273 32% 15%;
-    --sidebar-accent-foreground: 280 28% 92%;
-    --sidebar-border: 274 38% 18%;
-    --sidebar-ring: 282 80% 70%;
+
+    --sidebar-background: 220 30% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 202 100% 62%;
+    --sidebar-primary-foreground: 220 35% 7%;
+    --sidebar-accent: 216 20% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 23% 20%;
+    --sidebar-ring: 202 100% 62%;
   }
 
   .dark {
-    --background: 272 70% 5%;
-    --foreground: 280 28% 92%;
-    --card: 273 46% 9%;
-    --card-foreground: 280 28% 92%;
-    --popover: 273 50% 8%;
-    --popover-foreground: 280 28% 92%;
-    --primary: 276 78% 72%;
-    --primary-foreground: 272 70% 6%;
-    --secondary: 273 36% 16%;
-    --secondary-foreground: 280 28% 92%;
-    --muted: 273 32% 15%;
-    --muted-foreground: 277 22% 64%;
-    --accent: 282 80% 70%;
-    --accent-foreground: 272 70% 6%;
-    --destructive: 348 78% 58%;
-    --destructive-foreground: 280 28% 96%;
-    --border: 274 38% 18%;
-    --input: 274 38% 17%;
-    --ring: 282 80% 70%;
-    --chart-1: 282 80% 70%;
-    --chart-2: 263 78% 66%;
-    --chart-3: 300 70% 72%;
-    --chart-4: 250 60% 60%;
-    --chart-5: 320 64% 64%;
-    --sidebar-background: 272 70% 5%;
-    --sidebar-foreground: 280 28% 92%;
-    --sidebar-primary: 282 80% 70%;
-    --sidebar-primary-foreground: 272 70% 6%;
-    --sidebar-accent: 273 32% 15%;
-    --sidebar-accent-foreground: 280 28% 92%;
-    --sidebar-border: 274 38% 18%;
-    --sidebar-ring: 282 80% 70%;
+    --background: 220 30% 6%;
+    --foreground: 210 40% 98%;
+    --card: 218 28% 10%;
+    --card-foreground: 210 40% 98%;
+    --popover: 218 30% 9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 202 100% 62%;
+    --primary-foreground: 220 35% 7%;
+
+    --secondary: 216 24% 16%;
+    --secondary-foreground: 210 35% 96%;
+
+    --muted: 216 20% 15%;
+    --muted-foreground: 214 16% 70%;
+
+    --accent: 196 100% 68%;
+    --accent-foreground: 220 35% 7%;
+
+    --destructive: 0 76% 58%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 23% 20%;
+    --input: 215 23% 18%;
+    --ring: 202 100% 62%;
+
+    --chart-1: 202 100% 62%;
+    --chart-2: 196 100% 72%;
+    --chart-3: 213 95% 70%;
+    --chart-4: 215 16% 72%;
+    --chart-5: 210 40% 96%;
+
+    --sidebar-background: 220 30% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 202 100% 62%;
+    --sidebar-primary-foreground: 220 35% 7%;
+    --sidebar-accent: 216 20% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 23% 20%;
+    --sidebar-ring: 202 100% 62%;
   }
 }
-
-
 
 @layer base {
   * {
@@ -91,43 +106,49 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(282 80% 40% / 0.22), transparent 60%),
-      radial-gradient(ellipse 60% 50% at 50% 110%, hsl(276 80% 45% / 0.16), transparent 60%);
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(202 100% 48% / 0.24), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 50% 110%, hsl(196 100% 54% / 0.15), transparent 60%);
     background-attachment: fixed;
   }
 }
 
 @layer components {
-  /* Faint cosmic grid used behind hero sections */
   .omni-grid {
     background-image:
-      linear-gradient(to right, hsl(280 60% 70% / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(280 60% 70% / 0.05) 1px, transparent 1px);
+      linear-gradient(to right, hsl(202 100% 72% / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(202 100% 72% / 0.06) 1px, transparent 1px);
     background-size: 64px 64px;
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 75%);
     mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 75%);
   }
 
   .omni-gradient-text {
-    background: linear-gradient(180deg, hsl(280 35% 96%) 0%, hsl(282 70% 72%) 55%, hsl(276 72% 52%) 100%);
+    background: linear-gradient(
+      180deg,
+      hsl(210 40% 100%) 0%,
+      hsl(199 100% 82%) 48%,
+      hsl(202 100% 58%) 100%
+    );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
 
-  /* Glowing horizon arc */
   .omni-horizon {
-    background: radial-gradient(ellipse 60% 100% at 50% 100%, hsl(282 85% 62% / 0.55), transparent 70%);
+    background: radial-gradient(
+      ellipse 60% 100% at 50% 100%,
+      hsl(202 100% 55% / 0.58),
+      transparent 70%
+    );
     filter: blur(8px);
   }
 
-  /* Twinkling/pulsing dots in the hero background */
   .omni-dot {
     position: absolute;
     border-radius: 9999px;
-    background: hsl(282 90% 78%);
-    box-shadow: 0 0 8px 1px hsl(282 90% 70% / 0.8);
+    background: hsl(198 100% 82%);
+    box-shadow: 0 0 9px 1px hsl(202 100% 66% / 0.9);
     opacity: 0;
     animation: omni-twinkle var(--dur, 4s) ease-in-out var(--delay, 0s) infinite;
     will-change: opacity, transform;
@@ -135,12 +156,15 @@
 
   .omni-card {
     @apply rounded-2xl border border-border bg-card/60 backdrop-blur-sm;
-    box-shadow: 0 1px 0 0 hsl(280 60% 70% / 0.06) inset, 0 20px 50px -25px hsl(282 80% 30% / 0.5);
+    box-shadow:
+      0 1px 0 0 hsl(210 40% 100% / 0.07) inset,
+      0 20px 50px -25px hsl(202 100% 35% / 0.48);
   }
 }
+
 @keyframes omni-twinkle {
   0%, 100% { opacity: 0; transform: scale(0.6); }
-  50% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
