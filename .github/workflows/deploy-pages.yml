@@ -18,8 +18,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - name: Checkout
+      - name: Checkout GADL
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -28,11 +29,76 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Install GADL dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build GADL
         run: npm run build
+
+      - name: Checkout exact rs-map-viewer source
+        run: |
+          git clone https://github.com/dennisdev/rs-map-viewer.git .rs-map-viewer
+          cd .rs-map-viewer
+          git checkout d3c569b1cde38aac6182dd141fc4c84beaf06798
+
+      - name: Patch viewer only for GitHub Pages hosting
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          caches = Path(".rs-map-viewer/src/mapviewer/Caches.ts")
+          text = caches.read_text()
+          text = text.replace(
+              'const CACHE_PATH = "/caches/";',
+              'const CACHE_PATH = (process.env.PUBLIC_URL || "") + "/caches/";'
+          )
+          text = text.replace(
+              '        true,\n        signal,',
+              '        false,\n        signal,'
+          )
+          caches.write_text(text)
+
+          app = Path(".rs-map-viewer/src/mapviewer/MapViewerApp.tsx")
+          text = app.read_text()
+          text = text.replace(
+              'const workerPool = RenderDataWorkerPool.create(isWallpaperEngine ? 1 : 4);',
+              'const workerPool = RenderDataWorkerPool.create(1);'
+          )
+          app.write_text(text)
+          PY
+
+      - name: Install rs-map-viewer dependencies
+        working-directory: .rs-map-viewer
+        run: |
+          npm install --global yarn@1.22.22
+          yarn install --frozen-lockfile
+
+      - name: Download latest OSRS cache for 3D renderer
+        working-directory: .rs-map-viewer
+        run: |
+          printf '\n' | yarn download-caches 1
+
+      - name: Build exact rs-map-viewer
+        working-directory: .rs-map-viewer
+        env:
+          PUBLIC_URL: /GADL/map
+          CI: "false"
+        run: yarn build
+
+      - name: Publish 3D viewer and cache under GADL map path
+        run: |
+          mkdir -p dist/map
+          cp -a .rs-map-viewer/build/. dist/map/
+          cp -a .rs-map-viewer/caches dist/map/caches
+
+      - name: Verify 3D world build
+        run: |
+          test -f dist/map/index.html
+          test -f dist/map/caches/caches.json
+          echo "3D viewer index:"
+          ls -lh dist/map/index.html
+          echo "Published cache:"
+          cat dist/map/caches/caches.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
