@@ -12,8 +12,8 @@ import "leaflet/dist/leaflet.css";
 import Navbar from "../components/Navbar";
 import { Crosshair, LoaderCircle, MapPinned, MousePointer2 } from "lucide-react";
 
-const MAP_VERSION = "2026-03-04_a";
-const MAP_ID = 0;
+const MAP_VERSION = "2026-07-29_a";
+const MAP_ID = -1;
 const START_X = 3242;
 const START_Y = 3202;
 const MIN_ZOOM = -3;
@@ -46,28 +46,29 @@ class RuneScapeGridLayer extends L.GridLayer {
     const { x, negativeY } = tileCoordinates(coords);
     const plane = this.options.plane ?? 0;
 
-    // The first URL is the current map-server layout. The fallbacks make
-    // the page resilient to the two legacy layouts used by Cartography.
-    const urls = [
-      `https://maps.runescape.wiki/osrs/tiles/${MAP_ID}_${MAP_VERSION}/${coords.z}/${plane}_${x}_${negativeY}.png`,
-      `https://maps.runescape.wiki/osrs/versions/${MAP_VERSION}/map_icon_squares/${MAP_ID}/${coords.z}_${plane}_${x}_${negativeY}.png`,
-    ];
+    const url =
+      `https://maps.runescape.wiki/osrs/versions/${MAP_VERSION}/tiles/rendered/${MAP_ID}/${coords.z}/${plane}_${x}_${negativeY}.png`;
 
-    let attempt = 0;
+    let attempts = 0;
+    const maxAttempts = 3;
 
-    const loadNext = () => {
-      if (attempt >= urls.length) {
-        done(new Error("OSRS map tile failed to load"), tile);
+    tile.crossOrigin = "anonymous";
+    tile.onload = () => done(null, tile);
+    tile.onerror = () => {
+      attempts += 1;
+
+      if (attempts >= maxAttempts) {
+        done(new Error(`OSRS map tile failed to load: ${url}`), tile);
         return;
       }
 
-      tile.src = urls[attempt];
-      attempt += 1;
+      // A transient CDN failure should not leave a permanent black square.
+      window.setTimeout(() => {
+        tile.src = `${url}?retry=${attempts}`;
+      }, 150 * attempts);
     };
 
-    tile.onload = () => done(null, tile);
-    tile.onerror = loadNext;
-    loadNext();
+    tile.src = url;
 
     return tile;
   }
@@ -178,7 +179,7 @@ export default function MapPage() {
 
     if (tileState === "error") {
       return {
-        label: "Some map tiles could not be loaded",
+        label: "World map tiles failed to load",
         className: "text-amber-300",
       };
     }
@@ -211,7 +212,7 @@ export default function MapPage() {
                   )}
                   <span className={status.className}>{status.label}</span>
                   <span className="text-slate-600">•</span>
-                  <span>Map {MAP_ID}</span>
+                  <span>Full Map</span>
                   <span className="text-slate-600">•</span>
                   <span>{MAP_VERSION}</span>
                 </div>
