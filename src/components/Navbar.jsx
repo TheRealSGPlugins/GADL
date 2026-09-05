@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Download, LogIn, LogOut, Menu, X } from "lucide-react";
+import { Download, LogIn, LogOut, Menu, MonitorCog, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
+
+const CONTROL_PANEL_URL = "https://omnirune-control.onrender.com";
 
 export default function Navbar() {
   const location = useLocation();
@@ -95,6 +97,13 @@ export default function Navbar() {
         <div className="hidden items-center gap-3 md:flex">
           {isAuthenticated ? (
             <>
+              <a
+                href={CONTROL_PANEL_URL}
+                className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2.5 text-sm font-extrabold uppercase tracking-[0.07em] text-white shadow-[0_0_22px_rgba(37,99,235,0.28)] transition hover:bg-blue-500"
+              >
+                <MonitorCog className="h-4 w-4" />
+                Control Panel
+              </a>
               <span className="max-w-36 truncate text-sm font-semibold text-slate-300">
                 {displayName}
               </span>
@@ -130,16 +139,26 @@ export default function Navbar() {
         <div className="border-t border-blue-500/10 bg-[#01040a] px-5 pb-5 pt-3 md:hidden">
           <div className="space-y-1">{links.map((link) => navItem(link, true))}</div>
           {isAuthenticated ? (
-            <button
-              onClick={() => {
-                setMenuOpen(false);
-                logout();
-              }}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-md border border-blue-500/25 bg-blue-500/[0.06] px-4 py-3 text-sm font-extrabold uppercase tracking-[0.08em] text-white"
-            >
-              <LogOut className="h-4 w-4" />
-              Log out {displayName}
-            </button>
+            <div className="mt-3 space-y-2">
+              <a
+                href={CONTROL_PANEL_URL}
+                onClick={() => setMenuOpen(false)}
+                className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 px-4 py-3 text-sm font-extrabold uppercase tracking-[0.08em] text-white shadow-[0_0_22px_rgba(37,99,235,0.22)]"
+              >
+                <MonitorCog className="h-4 w-4" />
+                Control Panel
+              </a>
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  logout();
+                }}
+                className="flex w-full items-center justify-center gap-2 rounded-md border border-blue-500/25 bg-blue-500/[0.06] px-4 py-3 text-sm font-extrabold uppercase tracking-[0.08em] text-white"
+              >
+                <LogOut className="h-4 w-4" />
+                Log out {displayName}
+              </button>
+            </div>
           ) : (
             <Link
               to="/login"
